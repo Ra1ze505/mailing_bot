@@ -2,6 +2,7 @@ from telethon import TelegramClient, events
 
 from src.containers.container import container
 
+container.gateways.logging_setup.init()  # type: ignore
 bot: TelegramClient = container.gateways.bot()
 
 

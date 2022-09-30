@@ -1,5 +1,5 @@
 import copy
-from typing import Generic, Protocol, Type, TypeVar
+from typing import Generic, Protocol, Type
 
 from pydantic import parse_obj_as
 from sqlalchemy import select
@@ -8,12 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import Select
 
 from src.common.db import Base, Database
-from src.common.dto.base import BaseOutputSchema
 from src.common.exceptions.db import NotFoundException
 from src.common.repo.interfaces import IBaseRepository, ModelType, SchemaOutType
 
 
-class BaseRepository(IBaseRepository[SchemaOutType], Protocol[ModelType, SchemaOutType]):
+class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOutType]):
 
     model: Type[ModelType]
     schema: Type[SchemaOutType]

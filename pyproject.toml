@@ -40,7 +40,8 @@ plugins = ["sqlalchemy.ext.mypy.plugin", "pydantic.mypy"]
 
 [[tool.mypy.overrides]]
 module = [
-  "telethon.*"
+  "telethon.*",
+  "apscheduler.*"
 
 ]
 ignore_missing_imports = true
@@ -73,6 +74,7 @@ alembic = {version = "~1.8.1", extras = ["tz"]}
 asyncpg = ">=0.26.0"
 psycopg2-binary = "^2.9.3"
 greenlet = "~1.1.2"
+APScheduler = "^3.9.1"
 
 [tool.poetry.dev-dependencies]
 # Formatting

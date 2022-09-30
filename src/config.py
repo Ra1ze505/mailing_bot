@@ -18,6 +18,14 @@ class EnvBaseSettings(BaseSettings):
         env_file = ".env"
 
 
+class LoggingSettings(EnvBaseSettings):
+    serializer: bool = False
+    level: str = "INFO"
+
+    class Config:
+        env_prefix = "logging_"
+
+
 class AppSettings(EnvBaseSettings):
     name: str = ""
     root_path: str = ""
@@ -77,3 +85,4 @@ class Settings(BaseSettings):
     database: PostgresConfig = PostgresConfig()
     bot: BotConfig = BotConfig()
     sentry: SentryConfig = SentryConfig()
+    logger: LoggingSettings = LoggingSettings()
