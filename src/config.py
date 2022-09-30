@@ -71,9 +71,9 @@ class SentryConfig(EnvBaseSettings):
 
 
 class BotConfig(EnvBaseSettings):
-    api_id: str
-    api_hash: str
-    token: str
+    api_id: str = ""
+    api_hash: str = ""
+    token: str = ""
 
     class Config:
         env_prefix = "bot_"
