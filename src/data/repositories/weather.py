@@ -2,7 +2,7 @@ from aiocache import cached
 from httpx import AsyncClient
 
 from src.common.utils import serialize
-from src.domain.weather.dto.base import WeatherOutSchema
+from src.domain.weather.dto.base import WeatherNowOutSchema
 from src.domain.weather.interfaces import IWeatherRepository
 
 
@@ -19,7 +19,7 @@ class WeatherApiRepository(IWeatherRepository):
 
     @serialize
     @cached(ttl=60, noself=True)
-    async def get_weather_now(self, city: str) -> WeatherOutSchema:
+    async def get_weather_now(self, city: str) -> WeatherNowOutSchema:
         params = self._base_params()
         params.update(
             {

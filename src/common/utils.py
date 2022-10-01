@@ -1,5 +1,7 @@
+from functools import wraps
 from typing import Any, Callable, Coroutine, TypeVar, get_type_hints
 
+import anyio
 from mypy_extensions import KwArg, VarArg
 from pydantic import parse_obj_as
 
@@ -45,3 +47,14 @@ def get_wind_direction(wind_deg: int) -> str:
         return "северо-западный"
     else:
         return "нет данных"
+
+
+def run_async(func: Callable) -> Callable[..., Any]:
+    @wraps(func)
+    def wrapper(*args: tuple[Any], **kwargs: dict[str, Any]) -> Any:
+        async def coro_wrapper() -> Any:
+            return await func(*args, **kwargs)
+
+        return anyio.run(coro_wrapper)
+
+    return wrapper

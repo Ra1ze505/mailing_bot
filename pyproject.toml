@@ -90,6 +90,7 @@ ujson = "^5.5.0"
 # Libs
 APScheduler = "^3.9.1"
 httpx = "^0.23.0"
+typer = { version = "^0.6.1", extras = ["all"] }
 
 [tool.poetry.dev-dependencies]
 # Formatting

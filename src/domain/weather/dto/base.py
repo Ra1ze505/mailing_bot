@@ -42,7 +42,7 @@ class WindSchema(BaseModel):
     gust: float
 
 
-class WeatherOutSchema(BaseModel):
+class WeatherNowOutSchema(BaseModel):
     coord: CoordinatesSchema
     weather: list[WeatherSchema]
     base: str
