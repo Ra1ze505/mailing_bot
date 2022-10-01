@@ -1,18 +1,19 @@
-from dependency_injector import containers
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.common.container import BaseAppContainer
 from src.data.models import User
-from src.handlers.handlers import start_handler
+from src.domain.handlers.interfaces import IStartHandler
 from tests.factories.event import EventFactory
 
 
 async def test_start_handler(
-    container: containers.DeclarativeContainer,
+    container: BaseAppContainer,
     db_session: AsyncSession,
 ) -> None:
     event = EventFactory()
-    await start_handler(event=event)
+    use_case: IStartHandler = container.use_cases.start_handler()
+    await use_case(event=event)
 
     stmt = select(User)
     result = (await db_session.execute(stmt)).scalars().all()

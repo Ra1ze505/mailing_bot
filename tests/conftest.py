@@ -2,9 +2,9 @@ import pathlib
 from typing import Generator
 
 import pytest
-from dependency_injector import containers
 from faker import Faker
 
+from src.common.container import BaseAppContainer
 from src.containers.container import container as app_container
 
 pytest_plugins = ("tests.fixtures.base",)
@@ -26,7 +26,7 @@ def migrate_to() -> Generator[str, None, None]:
 
 
 @pytest.fixture()
-async def container() -> containers.DeclarativeContainer:
+async def container() -> BaseAppContainer:
     return app_container
 
 

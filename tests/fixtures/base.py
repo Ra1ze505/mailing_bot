@@ -9,12 +9,12 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from alembic.script import Script, ScriptDirectory
-from dependency_injector import containers, providers
-from loguru import logger
+from dependency_injector import providers
 from pytest_async_sqlalchemy import create_database, drop_database
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
+from src.common.container import BaseAppContainer
 from src.common.db import Base, Database
 from src.config import PostgresConfig
 from src.containers.container import container as app_container
@@ -24,7 +24,7 @@ db_config = PostgresConfig(db="test_database")
 
 
 @pytest.fixture()
-async def container() -> containers.DeclarativeContainer:
+async def container() -> BaseAppContainer:
     return app_container
 
 
@@ -163,7 +163,7 @@ def init_factories(db_session: AsyncSession) -> None:
 @pytest.fixture(autouse=True)
 async def override_session_in_container(
     db_session: AsyncSession,
-    container: containers.DeclarativeContainer,
+    container: BaseAppContainer,
 ) -> None:
     """Замена сессии в контейнере БД"""
 
@@ -178,11 +178,11 @@ async def override_session_in_container(
 
     db = providers.Singleton(MockDatabase, db_session)
     if hasattr(container.gateways, "db"):
-        container.gateways.db.override(db)  # type: ignore
+        container.gateways.db.override(db)
     elif hasattr(container.repos, "db"):
-        container.repos.db.override(db)  # type: ignore
+        container.repos.db.override(db)
 
 
 @pytest.fixture()
-async def db(_container: containers.DeclarativeContainer) -> Database:
-    return _container.repos.db()  # type: ignore
+async def db(_container: BaseAppContainer) -> Database:
+    return _container.repos.db()
