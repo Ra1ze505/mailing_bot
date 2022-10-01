@@ -1,3 +1,4 @@
+from loguru import logger
 from telethon import TelegramClient
 
 from src.containers.container import container
@@ -12,9 +13,16 @@ from src.handlers.handlers import (
     write_us_handler,
 )
 
-container.gateways.logging_setup.init()  # type: ignore
 bot: TelegramClient = container.gateways.bot()
 
+
+async def on_startup() -> None:
+    await container.init_resources()  # type: ignore
+    logger.info("Start bot")
+
+
+loop = bot.loop
+loop.run_until_complete(on_startup())
 
 # For run bot
 with bot:

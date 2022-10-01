@@ -23,7 +23,8 @@ async def change_time_mailing_handler(event: events.NewMessage.Event) -> None:
 
 @bot.on(events.NewMessage(pattern=r"Погода$"))
 async def weather_handler(event: events.NewMessage.Event) -> None:
-    ...
+    use_case = await container.use_cases.weather_handler()
+    await use_case(event)
 
 
 @bot.on(events.NewMessage(pattern=r"Курс$"))

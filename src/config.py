@@ -79,6 +79,13 @@ class BotConfig(EnvBaseSettings):
         env_prefix = "bot_"
 
 
+class OpenWeatherConfig(EnvBaseSettings):
+    api_key: str = ""
+
+    class Config:
+        env_prefix = "openweather_"
+
+
 class Settings(BaseSettings):
     base_dir: Path = BASE_DIR
     app: AppSettings = AppSettings(name="mailing_bot")
@@ -86,3 +93,4 @@ class Settings(BaseSettings):
     bot: BotConfig = BotConfig()
     sentry: SentryConfig = SentryConfig()
     logger: LoggingSettings = LoggingSettings()
+    open_weather: OpenWeatherConfig = OpenWeatherConfig()

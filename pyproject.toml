@@ -81,6 +81,7 @@ asyncpg = ">=0.26.0"
 psycopg2-binary = "^2.9.3"
 greenlet = "~1.1.2"
 APScheduler = "^3.9.1"
+httpx = "^0.23.0"
 
 [tool.poetry.dev-dependencies]
 # Formatting
