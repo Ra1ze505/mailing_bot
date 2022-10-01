@@ -1,9 +1,9 @@
 import pathlib
 from typing import Generator
 
-import faker.config
 import pytest
 from dependency_injector import containers
+from faker import Faker
 
 from src.containers.container import container as app_container
 
@@ -30,4 +30,8 @@ async def container() -> containers.DeclarativeContainer:
     return app_container
 
 
-faker.config.DEFAULT_LOCALE = "ru_RU"
+@pytest.fixture()
+def faker() -> Faker:
+    """Fixture that returns a seeded and suitable ``Faker`` instance."""
+    fake = Faker(locale="ru_RU")
+    return fake
