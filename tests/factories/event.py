@@ -17,7 +17,7 @@ class EventFactory:
         self.chat_id = fake.pyint() if chat_id is None else chat_id
         self._respond = self._default_respond if respond is None else respond
 
-    async def respond(self, *args: tuple[Any], **kwargs: dict[str, Any]) -> Callable:
+    async def respond(self, *args: tuple[Any], **kwargs: dict[str, Any]) -> Any:
         return await self._respond(*args, **kwargs)
 
     async def _default_respond(self, *args: tuple[Any], **kwargs: dict[str, Any]) -> None:
