@@ -1,5 +1,3 @@
-from typing import Any
-
 from dependency_injector import containers
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
