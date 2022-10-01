@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, validator
 
-from src.domain.utils import _get_wind_direction
+from src.common.utils import get_wind_direction
 
 PRETTY_WEATHER_NOW_MESSAGE = """
 **Погода в городе {city}:**
@@ -63,7 +63,7 @@ class WeatherOutSchema(BaseModel):
             city=self.name,
             description=self.weather[0].description.title(),
             temp=int(self.main.temp),
-            wind_direction=_get_wind_direction(self.wind.deg),
+            wind_direction=get_wind_direction(self.wind.deg),
             wind_speed=int(self.wind.speed),
             humidity=int(self.main.humidity),
             clouds_all=int(self.clouds.get("all", 0)),

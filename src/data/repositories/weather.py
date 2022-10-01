@@ -1,6 +1,7 @@
+from aiocache import cached
 from httpx import AsyncClient
-from pydantic import parse_obj_as
 
+from src.common.utils import serialize
 from src.domain.weather.dto.base import WeatherOutSchema
 from src.domain.weather.interfaces import IWeatherRepository
 
@@ -16,6 +17,8 @@ class WeatherApiRepository(IWeatherRepository):
     def _base_params(self) -> dict[str, str | int]:
         return {"cnt": 6, "units": "metric", "lang": "ru", "appid": self.api_key}
 
+    @serialize
+    @cached(ttl=60, noself=True)
     async def get_weather_now(self, city: str) -> WeatherOutSchema:
         params = self._base_params()
         params.update(
@@ -24,4 +27,4 @@ class WeatherApiRepository(IWeatherRepository):
             }
         )
         response = await self.http_client.get(self.base_url + "weather", params=params)
-        return parse_obj_as(WeatherOutSchema, response.json())
+        return response.json()

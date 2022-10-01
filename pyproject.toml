@@ -47,7 +47,8 @@ module = [
   "telethon.*",
   "apscheduler.*",
   "factory.*",
-  "pytest_async_sqlalchemy.*"
+  "pytest_async_sqlalchemy.*",
+  "aiocache.*"
 
 ]
 ignore_missing_imports = true
@@ -80,6 +81,13 @@ alembic = {version = "~1.8.1", extras = ["tz"]}
 asyncpg = ">=0.26.0"
 psycopg2-binary = "^2.9.3"
 greenlet = "~1.1.2"
+
+# Cache
+aiocache = "^0.11.1"
+msgpack = "^1.0.4"
+ujson = "^5.5.0"
+
+# Libs
 APScheduler = "^3.9.1"
 httpx = "^0.23.0"
 

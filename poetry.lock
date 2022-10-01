@@ -1,4 +1,18 @@
 [[package]]
+name = "aiocache"
+version = "0.11.1"
+description = "multi backend asyncio cache"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["asynctest (>=0.11.0)", "codecov", "coverage", "flake8", "ipdb", "marshmallow", "pystache", "pytest", "pytest-asyncio", "pytest-mock", "sphinx", "sphinx-autobuild", "sphinx-rtd-theme", "black"]
+memcached = ["aiomcache (>=0.5.2)"]
+msgpack = ["msgpack (>=0.5.5)"]
+redis = ["aioredis (>=0.3.3)", "aioredis (>=1.0.0)"]
+
+[[package]]
 name = "alembic"
 version = "1.8.1"
 description = "A database migration tool for SQLAlchemy."
@@ -325,6 +339,14 @@ description = "Safely add untrusted strings to HTML/XML markup."
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "msgpack"
+version = "1.0.4"
+description = "MessagePack serializer"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "mypy"
@@ -815,6 +837,14 @@ devenv = ["black", "pyroma", "pytest-cov", "zest.releaser"]
 test = ["pytest-mock (>=3.3)", "pytest (>=4.3)"]
 
 [[package]]
+name = "ujson"
+version = "5.5.0"
+description = "Ultra fast JSON encoder and decoder for Python"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "urllib3"
 version = "1.26.12"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -841,9 +871,10 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "95657fb1aae52872d626cce23bb8b1d36ca701c918c0c1327003ecd8a4b55621"
+content-hash = "e74cf71a8182b55cee6a5bb5db6a7038cc8fb0002f1c2bbc776e512ecf41840b"
 
 [metadata.files]
+aiocache = []
 alembic = []
 anyio = []
 apscheduler = []
@@ -868,6 +899,7 @@ isort = []
 loguru = []
 mako = []
 markupsafe = []
+msgpack = []
 mypy = []
 mypy-extensions = []
 packaging = []
@@ -906,5 +938,6 @@ types-python-slugify = []
 typing-extensions = []
 tzdata = []
 tzlocal = []
+ujson = []
 urllib3 = []
 win32-setctime = []
