@@ -90,7 +90,7 @@ class WeatherListSchema(BaseModel):
     dt_txt: str
 
 
-class WeatherByDaySchema(BaseModel):
+class WeatherForecastSchema(BaseModel):
     cod: str
     message: int
     cnt: int

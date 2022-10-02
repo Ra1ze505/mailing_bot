@@ -27,6 +27,12 @@ async def weather_handler(event: events.NewMessage.Event) -> None:
     await use_case(event)
 
 
+@bot.on(events.CallbackQuery(pattern=r"weather_by_day"))
+async def weather_by_day_handler(event: events.CallbackQuery.Event) -> None:
+    use_case = await container.use_cases.weather_by_day_handler()
+    await use_case(event)
+
+
 @bot.on(events.NewMessage(pattern=r"Курс$"))
 async def rate_handler(event: events.NewMessage.Event) -> None:
     ...

@@ -1,9 +1,8 @@
 from telethon import events
 
+from src.domain.handlers.buttons import start_markup
 from src.domain.handlers.interfaces import IStartHandler
-from src.domain.user.dto.base import UserBaseSchema
 from src.domain.user.interfaces import IGetOrCreateUser
-from src.handlers.buttons import start_markup
 
 
 class StartHandler(IStartHandler):
