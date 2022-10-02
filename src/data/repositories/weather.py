@@ -2,7 +2,7 @@ from aiocache import cached
 from httpx import AsyncClient
 
 from src.common.utils import serialize
-from src.domain.weather.dto.base import WeatherNowOutSchema
+from src.domain.weather.dto.base import WeatherByDaySchema, WeatherNowOutSchema
 from src.domain.weather.interfaces import IWeatherRepository
 
 
@@ -15,7 +15,7 @@ class WeatherApiRepository(IWeatherRepository):
         self.api_key = config["api_key"]
 
     def _base_params(self) -> dict[str, str | int]:
-        return {"cnt": 6, "units": "metric", "lang": "ru", "appid": self.api_key}
+        return {"units": "metric", "lang": "ru", "appid": self.api_key}
 
     @serialize
     @cached(ttl=60, noself=True)
@@ -27,4 +27,17 @@ class WeatherApiRepository(IWeatherRepository):
             }
         )
         response = await self.http_client.get(self.base_url + "weather", params=params)
+        return response.json()
+
+    @serialize
+    @cached(ttl=60, noself=True)
+    async def get_weather_forecast(self, city: str) -> WeatherByDaySchema:
+        params = self._base_params()
+        params.update(
+            {
+                "q": city,
+                "cnt": 6,
+            }
+        )
+        response = await self.http_client.get(self.base_url + "forecast", params=params)
         return response.json()

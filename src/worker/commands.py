@@ -1,6 +1,9 @@
 import typer
+from rich import print
 
+from src.common.start_up import on_startup
 from src.common.utils import run_async
+from src.containers.container import container
 
 app = typer.Typer()
 
@@ -8,15 +11,11 @@ app = typer.Typer()
 @app.command()
 @run_async
 async def hello(name: str) -> None:
-    print(f"Hello {name}")
+    await on_startup()
+    weather = await container.repos.weather()
 
-
-@app.command()
-def goodbye(name: str, formal: bool = False) -> None:
-    if formal:
-        print(f"Goodbye Ms. {name}. Have a good day.")
-    else:
-        print(f"Bye {name}!")
+    res = await weather.get_weather_forecast("Moscow")
+    print(res)
 
 
 if __name__ == "__main__":

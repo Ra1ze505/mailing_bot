@@ -12,6 +12,13 @@ PRETTY_WEATHER_NOW_MESSAGE = """
 Облачность: {clouds_all}%
 """
 
+PRETTY_WEATHER_MESSAGE = """
+**Погода в городе {city}**
+В течении дня:
+-- Cредняя температура  {mean_temp}°C
+-- Максимальная температура {max_temp}°C
+-- Минимальная температура {min_temp}°C"""
+
 
 class CoordinatesSchema(BaseModel):
     lon: float
@@ -49,7 +56,7 @@ class WeatherNowOutSchema(BaseModel):
     main: WeatherMainSchema
     visibility: int
     wind: WindSchema
-    rain: dict
+    rain: dict | None = None
     clouds: dict
     dt: int
     sys: dict
@@ -67,4 +74,36 @@ class WeatherNowOutSchema(BaseModel):
             wind_speed=int(self.wind.speed),
             humidity=int(self.main.humidity),
             clouds_all=int(self.clouds.get("all", 0)),
+        )
+
+
+class WeatherListSchema(BaseModel):
+    dt: int
+    main: WeatherMainSchema
+    weather: list[WeatherSchema]
+    clouds: dict
+    wind: WindSchema
+    visibility: int
+    pop: float
+    rain: dict | None = None
+    sys: dict
+    dt_txt: str
+
+
+class WeatherByDaySchema(BaseModel):
+    cod: str
+    message: int
+    cnt: int
+    list: list[WeatherListSchema]
+    city: dict
+
+    def get_pretty_forecast(self) -> str:
+        mean_temp = int(sum([item.main.temp for item in self.list]) / len(self.list))
+        max_temp = int(max([item.main.temp for item in self.list]))
+        min_temp = int(min([item.main.temp for item in self.list]))
+        return PRETTY_WEATHER_MESSAGE.format(
+            city=self.city["name"],
+            mean_temp=mean_temp,
+            max_temp=max_temp,
+            min_temp=min_temp,
         )
