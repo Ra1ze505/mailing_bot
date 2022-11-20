@@ -1,14 +1,16 @@
 import abc
+from datetime import time
 
 from telethon import events
 
 from src.common.repo.interfaces import IBaseRepository
-from src.data.models import User
 from src.domain.user.dto.base import UserOutSchema
 
 
 class IUserRepository(IBaseRepository[UserOutSchema]):
-    ...
+    @abc.abstractmethod
+    async def get_by_sending_time(self, time_mailing: time) -> list[UserOutSchema]:
+        ...
 
 
 class IGetOrCreateUser(abc.ABC):

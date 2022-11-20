@@ -48,7 +48,8 @@ module = [
   "apscheduler.*",
   "factory.*",
   "pytest_async_sqlalchemy.*",
-  "aiocache.*"
+  "aiocache.*",
+  "celery.*",
 
 ]
 ignore_missing_imports = true
@@ -87,10 +88,16 @@ aiocache = "^0.11.1"
 msgpack = "^1.0.4"
 ujson = "^5.5.0"
 
+# Typehinting
+mypy = "~0.982"
+mypy-extensions = "~0.4.3"
+
 # Libs
 APScheduler = "^3.9.1"
 httpx = "^0.23.0"
 typer = { version = "^0.6.1", extras = ["all"] }
+celery = "^5.2.7"
+redis = "^4.3.1"
 
 [tool.poetry.dev-dependencies]
 # Formatting

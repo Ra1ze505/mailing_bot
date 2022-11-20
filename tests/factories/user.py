@@ -1,0 +1,14 @@
+import factory
+
+from src.data.models import User
+from tests.async_alchemy_factory import AsyncSQLAlchemyModelFactory
+
+
+class UserFactory(AsyncSQLAlchemyModelFactory):
+    id = factory.Sequence(lambda n: n)
+    chat_id = factory.Sequence(lambda n: n)
+    city = factory.Sequence(lambda n: f"Город {n}")
+    timezone = factory.Sequence(lambda n: n)
+
+    class Meta:
+        model = User

@@ -12,7 +12,7 @@ class ReposContainer(containers.DeclarativeContainer):
     db: providers.Provider[Database] = providers.Dependency()
     gateways = providers.DependenciesContainer()
 
-    bot_repo = providers.Factory(BotRepository, db=db, bot=gateways.bot)
+    bot_repo = providers.Factory(BotRepository, bot=gateways.bot)
     weather: providers.Factory[IWeatherRepository] = providers.Factory(
         WeatherApiRepository, http_client=gateways.http_client, config=config.open_weather
     )

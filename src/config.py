@@ -36,6 +36,11 @@ class AppSettings(EnvBaseSettings):
         env_prefix = "app_"
 
 
+class BrokerConfig(EnvBaseSettings):
+    broker_url: str = "redis://localhost:6379/0"
+    broker_api: str = "redis://localhost:6379/0"
+
+
 class PostgresConfig(EnvBaseSettings):
     scheme: str = "postgresql+asyncpg"
     host: str = "localhost"
@@ -94,3 +99,4 @@ class Settings(BaseSettings):
     sentry: SentryConfig = SentryConfig()
     logger: LoggingSettings = LoggingSettings()
     open_weather: OpenWeatherConfig = OpenWeatherConfig()
+    broker: BrokerConfig = BrokerConfig()
