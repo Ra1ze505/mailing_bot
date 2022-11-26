@@ -84,6 +84,17 @@ class BotConfig(EnvBaseSettings):
         env_prefix = "bot_"
 
 
+class ParseConfig(EnvBaseSettings):
+    api_id: str = ""
+    api_hash: str = ""
+    string_session: str = ""
+    news_channel: str = ""
+    key_word: str = ""
+
+    class Config:
+        env_prefix = "parse_"
+
+
 class OpenWeatherConfig(EnvBaseSettings):
     api_key: str = ""
 
@@ -100,3 +111,4 @@ class Settings(BaseSettings):
     logger: LoggingSettings = LoggingSettings()
     open_weather: OpenWeatherConfig = OpenWeatherConfig()
     broker: BrokerConfig = BrokerConfig()
+    parse: ParseConfig = ParseConfig()

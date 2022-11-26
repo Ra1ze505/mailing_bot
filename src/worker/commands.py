@@ -11,11 +11,19 @@ app = typer.Typer()
 
 @app.command()
 @run_async
-async def mailing(self: Any, msg: str) -> None:
+async def mailing(msg: str) -> None:
     await on_startup()
     bot_repo = await container.repos.bot_repo()
     async with bot_repo as bot:
         await bot.send_message_all(msg)
+
+
+@app.command()
+@run_async
+async def parse() -> None:
+    await on_startup()
+    parse_repo = await container.use_cases.parse_last_news()
+    await parse_repo()
 
 
 if __name__ == "__main__":

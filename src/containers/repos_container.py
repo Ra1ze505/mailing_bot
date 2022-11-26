@@ -2,6 +2,8 @@ from dependency_injector import containers, providers
 
 from src.common.db import Database
 from src.data.repositories.bot import BotRepository
+from src.data.repositories.news import NewsRepository
+from src.data.repositories.parse import ParseNewsRepository
 from src.data.repositories.user import UserRepository
 from src.data.repositories.weather import WeatherApiRepository
 from src.domain.weather.interfaces import IWeatherRepository
@@ -13,7 +15,15 @@ class ReposContainer(containers.DeclarativeContainer):
     gateways = providers.DependenciesContainer()
 
     bot_repo = providers.Factory(BotRepository, bot=gateways.bot)
+    parse_news_repo = providers.Factory(
+        ParseNewsRepository,
+        parse_client=gateways.parse_client,
+        config=config.parse,
+    )
     weather: providers.Factory[IWeatherRepository] = providers.Factory(
-        WeatherApiRepository, http_client=gateways.http_client, config=config.open_weather
+        WeatherApiRepository,
+        http_client=gateways.http_client,
+        config=config.open_weather,
     )
     user_repo = providers.Factory(UserRepository, db=db)
+    news_repo = providers.Factory(NewsRepository, db=db)

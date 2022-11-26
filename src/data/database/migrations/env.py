@@ -20,7 +20,9 @@ sys.path.append(str(BASE_DIR))
 config = context.config
 
 app_config = Settings()
-url = app_config.database.url
+
+url = app_config.database.url.replace("+asyncpg", "")
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
@@ -61,7 +63,10 @@ def run_migrations_offline():
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url, target_metadata=target_metadata, literal_binds=True, include_object=include_object
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        include_object=include_object,
     )
 
     with context.begin_transaction():
@@ -82,7 +87,9 @@ def run_migrations_online():
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata, include_object=include_object
+            connection=connection,
+            target_metadata=target_metadata,
+            include_object=include_object,
         )
 
         with context.begin_transaction():
