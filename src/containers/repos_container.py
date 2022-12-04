@@ -3,7 +3,8 @@ from dependency_injector import containers, providers
 from src.common.db import Database
 from src.data.repositories.bot import BotRepository
 from src.data.repositories.news import NewsRepository
-from src.data.repositories.parse import ParseNewsRepository
+from src.data.repositories.parse import ParseNewsRepository, ParseRateRepository
+from src.data.repositories.rate import RateRepository
 from src.data.repositories.user import UserRepository
 from src.data.repositories.weather import WeatherApiRepository
 from src.domain.weather.interfaces import IWeatherRepository
@@ -20,6 +21,10 @@ class ReposContainer(containers.DeclarativeContainer):
         parse_client=gateways.parse_client,
         config=config.parse,
     )
+    parse_rate_repo = providers.Factory(
+        ParseRateRepository,
+        api_url=config.rate.api_url,
+    )
     weather: providers.Factory[IWeatherRepository] = providers.Factory(
         WeatherApiRepository,
         http_client=gateways.http_client,
@@ -27,3 +32,4 @@ class ReposContainer(containers.DeclarativeContainer):
     )
     user_repo = providers.Factory(UserRepository, db=db)
     news_repo = providers.Factory(NewsRepository, db=db)
+    rate_repo = providers.Factory(RateRepository, db=db)

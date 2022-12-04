@@ -22,8 +22,8 @@ async def mailing(msg: str) -> None:
 @run_async
 async def parse() -> None:
     await on_startup()
-    parse_repo = await container.use_cases.parse_last_news()
-    await parse_repo()
+    parse_repo = await container.use_cases.parse_current_rate()
+    res = await parse_repo()
 
 
 if __name__ == "__main__":

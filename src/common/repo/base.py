@@ -33,7 +33,7 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
     async def create(self, data: dict) -> SchemaOutType:
         obj = self.model(**data)
         self.session.add(obj)
-        await self.session.commit()
+        await self.commit()
 
         q = (
             self.get_query()
@@ -57,7 +57,8 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
             setattr(obj, key, val)
 
         self.session.add(obj)
-        await self.session.commit()
+
+        await self.commit()
 
         q = (
             self.get_query()
@@ -90,3 +91,10 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
             return await self.update(data["id"], data)
         except NotFoundException:
             return await self.create(data)
+
+    async def commit(self) -> None:
+        try:
+            await self.session.commit()
+        except Exception as e:
+            await self.session.rollback()
+            raise e

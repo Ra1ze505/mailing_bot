@@ -3,7 +3,6 @@ from httpx import AsyncClient
 
 from src.common.celery import init_celery
 from src.common.db import Database
-from src.common.http_client import init_async_http_client
 from src.common.logging import setup_logging
 from src.common.scheduler import init_scheduler
 from src.common.telegram_clients import init_bot, init_parse_client
@@ -14,10 +13,6 @@ class Gateways(containers.DeclarativeContainer):
 
     logging_setup: providers.Provider[None] = providers.Resource(
         setup_logging, config=config.logger
-    )
-    http_client: providers.Provider[AsyncClient] = providers.Resource(
-        init_async_http_client,
-        base_url="",
     )
     db = providers.Singleton(Database, config.database)
     bot = providers.Singleton(init_bot, config.bot)

@@ -102,6 +102,13 @@ class OpenWeatherConfig(EnvBaseSettings):
         env_prefix = "openweather_"
 
 
+class RateConfig(EnvBaseSettings):
+    api_url: str = ""
+
+    class Config:
+        env_prefix = "rate_"
+
+
 class Settings(BaseSettings):
     base_dir: Path = BASE_DIR
     app: AppSettings = AppSettings(name="mailing_bot")
@@ -112,3 +119,4 @@ class Settings(BaseSettings):
     open_weather: OpenWeatherConfig = OpenWeatherConfig()
     broker: BrokerConfig = BrokerConfig()
     parse: ParseConfig = ParseConfig()
+    rate: RateConfig = RateConfig()

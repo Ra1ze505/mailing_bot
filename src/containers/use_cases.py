@@ -5,6 +5,7 @@ from src.domain.handlers.use_cases.weather import WeatherByDayHandler, WeatherHa
 from src.domain.mailing.use_cases.bulk_mailing import BulkMailing
 from src.domain.mailing.use_cases.mailing import Mailing
 from src.domain.news.use_cases.parse_last_news import ParseLastNews
+from src.domain.rate.use_cases.parse_current_rate import ParseCurrentRate
 from src.domain.user.use_cases.get_or_create import GetOrCreateUser
 from src.domain.weather.use_cases.get_weather_forecast import GetWeatherForecast
 from src.domain.weather.use_cases.get_weather_now import GetWeatherNow
@@ -29,6 +30,11 @@ class UseCasesContainer(containers.DeclarativeContainer):
     # Parser
     parse_last_news = providers.Factory(
         ParseLastNews, parse_repo=repos.parse_news_repo, news_repo=repos.news_repo
+    )
+    parse_current_rate = providers.Factory(
+        ParseCurrentRate,
+        parse_rate_repo=repos.parse_rate_repo,
+        rate_repo=repos.rate_repo,
     )
 
     # Handlers
