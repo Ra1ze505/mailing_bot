@@ -7,12 +7,14 @@ class EventFactory:
     def __init__(
         self,
         sender_id: int | None = None,
+        username: str | None = None,
         message: str | None = None,
         chat_id: int | None = None,
         respond: Callable | None = None,
     ):
         fake = Faker(locale="ru_RU")
         self.sender_id = fake.pyint() if sender_id is None else sender_id
+        self.username = fake.user_name() if username is None else username
         self.message = fake.pystr() if message is None else message
         self.chat_id = fake.pyint() if chat_id is None else chat_id
         self._respond = self._default_respond if respond is None else respond
@@ -22,3 +24,7 @@ class EventFactory:
 
     async def _default_respond(self, *args: tuple[Any], **kwargs: dict[str, Any]) -> None:
         return None
+
+    @property
+    def sender(self) -> "EventFactory":
+        return self

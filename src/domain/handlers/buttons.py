@@ -3,7 +3,11 @@ from telethon.client import ButtonMethods
 
 start_markup = ButtonMethods.build_reply_markup(
     [
-        [Button.text("Погода", resize=True), Button.text("Курс"), Button.text("Новости")],
+        [
+            Button.text("Погода", resize=True),
+            Button.text("Курс"),
+            Button.text("Новости"),
+        ],
         [Button.text("Изменить город"), Button.text("Изменить время рассылки")],
         [Button.text("О боте"), Button.text("Написать нам")],
     ]
@@ -11,4 +15,11 @@ start_markup = ButtonMethods.build_reply_markup(
 
 weather_markup = ButtonMethods.build_reply_markup(
     [Button.inline("Погода на день", data="weather_by_day")]
+)
+
+change_city_markup = ButtonMethods.build_reply_markup(
+    [
+        [Button.text("Москва", resize=True), Button.text("Санкт-Петербург")],
+        [Button.text("Отмена")],
+    ]
 )

@@ -34,19 +34,19 @@ class WeatherSchema(BaseModel):
 
 class WeatherMainSchema(BaseModel):
     temp: float
-    feels_like: float
-    temp_min: float
-    temp_max: float
-    pressure: int
+    feels_like: float | None
+    temp_min: float | None
+    temp_max: float | None
+    pressure: int | None
     humidity: int
-    sea_level: int
-    grnd_level: int
+    sea_level: int | None
+    grnd_level: int | None
 
 
 class WindSchema(BaseModel):
     speed: float
     deg: int
-    gust: float
+    gust: float | None
 
 
 class WeatherNowOutSchema(BaseModel):
@@ -107,3 +107,12 @@ class WeatherForecastSchema(BaseModel):
             max_temp=max_temp,
             min_temp=min_temp,
         )
+
+
+class CityWeather(BaseModel):
+    city: str
+    timezone: int
+
+    @validator("timezone", pre=True)
+    def prepare_timezone(cls, v: int) -> int:
+        return int(v / 3600)

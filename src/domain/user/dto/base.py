@@ -7,6 +7,7 @@ from src.common.dto.base import BaseOutputSchema, OrmModel
 
 class UserBaseSchema(OrmModel):
     id: int = Field(..., description="Идентификатор пользователя")
+    username: str = Field(..., description="Имя пользователя")
     chat_id: int = Field(..., description="Идентификатор чата")
     city: str = Field("Москва", description="Город")
     timezone: int | None = Field(None, discription="Временная зона")
@@ -14,4 +15,8 @@ class UserBaseSchema(OrmModel):
 
 
 class UserOutSchema(UserBaseSchema, BaseOutputSchema):
+    ...
+
+
+class UserInSchema(UserBaseSchema):
     ...

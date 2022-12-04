@@ -27,7 +27,6 @@ class ReposContainer(containers.DeclarativeContainer):
     )
     weather: providers.Factory[IWeatherRepository] = providers.Factory(
         WeatherApiRepository,
-        http_client=gateways.http_client,
         config=config.open_weather,
     )
     user_repo = providers.Factory(UserRepository, db=db)

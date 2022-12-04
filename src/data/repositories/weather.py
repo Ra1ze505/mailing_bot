@@ -1,6 +1,8 @@
+import httpx
 from aiocache import cached
 from httpx import AsyncClient
 
+from src.common.exceptions.weather import WeatherException
 from src.common.utils import serialize
 from src.domain.weather.dto.base import WeatherForecastSchema, WeatherNowOutSchema
 from src.domain.weather.interfaces import IWeatherRepository
@@ -10,8 +12,7 @@ class WeatherApiRepository(IWeatherRepository):
 
     base_url: str = "https://api.openweathermap.org/data/2.5/"
 
-    def __init__(self, http_client: AsyncClient, config: dict):
-        self.http_client = http_client
+    def __init__(self, config: dict):
         self.api_key = config["api_key"]
 
     def _base_params(self) -> dict[str, str | int]:
@@ -26,8 +27,12 @@ class WeatherApiRepository(IWeatherRepository):
                 "q": city,
             }
         )
-        response = await self.http_client.get(self.base_url + "weather", params=params)
-        return response.json()
+        async with httpx.AsyncClient() as client:
+            response = await client.get(self.base_url + "weather", params=params)
+            if response.status_code == 200:
+                return response.json()
+            else:
+                raise WeatherException(response.text)
 
     @serialize
     @cached(ttl=60, noself=True)
@@ -39,5 +44,9 @@ class WeatherApiRepository(IWeatherRepository):
                 "cnt": 6,
             }
         )
-        response = await self.http_client.get(self.base_url + "forecast", params=params)
-        return response.json()
+        async with httpx.AsyncClient() as client:
+            response = await client.get(self.base_url + "forecast", params=params)
+            if response.status_code == 200:
+                return response.json()
+            else:
+                raise WeatherException(response.text)
