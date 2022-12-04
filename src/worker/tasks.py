@@ -20,12 +20,12 @@ def setup_periodic_tasks(sender: Celery, **kwargs: dict) -> None:
     sender.add_periodic_task(crontab(minute="*"), parse.s())
 
 
-@app.task
+@app.task()
 def mailing() -> None:
     ...
 
 
-@app.task
+@app.task(autoretry_for=(Exception,), retry_kwargs={"max_retries": 5})
 def parse() -> None:
     loop = asyncio.get_event_loop()
     loop.run_until_complete(_parse())
