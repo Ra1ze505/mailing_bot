@@ -25,3 +25,7 @@ class RateOutSchema(RateBaseSchema, BaseOutputSchema):
     @property
     def eur(self) -> float:
         return self.data["EUR"]["Value"]
+
+    @property
+    def pretty_rate(self) -> str:
+        return f"**Курс валют на сегодня**\nДоллар: {self.usd}\nЕвро: {self.eur}"

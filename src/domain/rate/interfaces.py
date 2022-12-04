@@ -11,10 +11,18 @@ class IParseRateRepository(abc.ABC):
 
 
 class IRateRepository(IBaseRepository[RateOutSchema]):
-    ...
+    @abc.abstractmethod
+    async def get_last_rate(self) -> RateOutSchema:
+        ...
 
 
 class IParseCurrentRate(abc.ABC):
     @abc.abstractmethod
     async def __call__(self) -> None:
+        ...
+
+
+class IGetCurrentRate(abc.ABC):
+    @abc.abstractmethod
+    async def __call__(self) -> RateOutSchema:
         ...

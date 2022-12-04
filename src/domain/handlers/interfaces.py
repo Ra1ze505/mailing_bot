@@ -26,3 +26,9 @@ class IChangeTimeMailing(abc.ABC):
     @abc.abstractmethod
     async def __call__(self, event: events.NewMessage.Event, conv: Conversation) -> None:
         ...
+
+
+class IRateByDay(abc.ABC):
+    @abc.abstractmethod
+    async def __call__(self, event: events.NewMessage.Event) -> None:
+        ...
