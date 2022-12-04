@@ -1,6 +1,7 @@
 from dependency_injector import containers, providers
 
 from src.domain.handlers.use_cases.change_city import ChangeCity
+from src.domain.handlers.use_cases.change_time_mailing import ChangeTimeMailing
 from src.domain.handlers.use_cases.start import StartHandler
 from src.domain.handlers.use_cases.weather import WeatherByDayHandler, WeatherHandler
 from src.domain.mailing.use_cases.bulk_mailing import BulkMailing
@@ -65,5 +66,10 @@ class UseCasesContainer(containers.DeclarativeContainer):
         ChangeCity,
         get_or_create_user=get_or_create_user,
         get_weather_city=get_weather_city,
+        user_repo=repos.user_repo,
+    )
+    change_time_mailing = providers.Factory(
+        ChangeTimeMailing,
+        get_or_create_user=get_or_create_user,
         user_repo=repos.user_repo,
     )

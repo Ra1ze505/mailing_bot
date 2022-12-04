@@ -23,3 +23,11 @@ change_city_markup = ButtonMethods.build_reply_markup(
         [Button.text("Отмена")],
     ]
 )
+
+
+change_time_markup = ButtonMethods.build_reply_markup(
+    [
+        [Button.text("8:00", resize=True), Button.text("10:00"), Button.text("12:00")],
+        [Button.text("Отмена")],
+    ]
+)

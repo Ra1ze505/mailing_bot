@@ -20,7 +20,9 @@ async def change_city_handler(event: events.NewMessage.Event) -> None:
 
 @bot.on(events.NewMessage(pattern=r"Изменить\sвремя\sрассылки$"))
 async def change_time_mailing_handler(event: events.NewMessage.Event) -> None:
-    ...
+    async with bot.conversation(event.sender_id) as conv:
+        use_case = container.use_cases.change_time_mailing()
+        await use_case(event, conv)
 
 
 @bot.on(events.NewMessage(pattern=r"Погода$"))

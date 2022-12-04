@@ -1,13 +1,16 @@
+import datetime
+
 from telethon import events
 from telethon.tl.custom import Conversation
 
 from src.domain.handlers.buttons import change_city_markup, start_markup
+from src.domain.handlers.interfaces import IChangeCity
 from src.domain.user.interfaces import IGetOrCreateUser, IUserRepository
 from src.domain.weather.dto.base import CityWeather
 from src.domain.weather.interfaces import IGetWeatherCity
 
 
-class ChangeCity:
+class ChangeCity(IChangeCity):
     def __init__(
         self,
         get_or_create_user: IGetOrCreateUser,
@@ -29,10 +32,15 @@ class ChangeCity:
         if new_city is None:
             return await conv.send_message("Город не изменен", buttons=start_markup)
 
-        user.city = new_city.city
-        user.timezone = new_city.timezone
-        await self.user_repo.update(
-            object_id=user.id, data={"city": user.city, "timezone": user.timezone}
+        user = await self.user_repo.update(
+            object_id=user.id,
+            data={
+                "city": new_city.city,
+                "timezone": new_city.timezone,
+                "time_mailing": self._get_new_time_mailing(
+                    user.timezone, new_city.timezone, user.time_mailing
+                ),
+            },
         )
 
         return await conv.send_message(f"Город изменен на {user.city}", buttons=start_markup)
@@ -47,3 +55,17 @@ class ChangeCity:
         else:
             await conv.send_message("Некорректный город\nПопробуйте еще раз")
             return await self._get_city(conv)
+
+    def _get_new_time_mailing(
+        self,
+        old_timezone: int,
+        new_timezone: int,
+        old_time_mailing: datetime.time,
+    ) -> datetime.time:
+        old_hour_mailing = old_time_mailing.hour + old_timezone
+        new_hour_mailing = old_hour_mailing - new_timezone
+        if new_hour_mailing > 23:
+            new_hour_mailing -= 24
+        elif new_hour_mailing < 0:
+            new_hour_mailing += 24
+        return datetime.time(new_hour_mailing, old_time_mailing.minute)

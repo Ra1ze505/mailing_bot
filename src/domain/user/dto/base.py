@@ -10,12 +10,11 @@ class UserBaseSchema(OrmModel):
     username: str = Field(..., description="Имя пользователя")
     chat_id: int = Field(..., description="Идентификатор чата")
     city: str = Field("Москва", description="Город")
-    timezone: int | None = Field(None, discription="Временная зона")
-    time_mailing: datetime.time | None = Field(None, description="Время рассылки")
 
 
 class UserOutSchema(UserBaseSchema, BaseOutputSchema):
-    ...
+    time_mailing: datetime.time = Field(..., description="Время рассылки")
+    timezone: int = Field(..., discription="Временная зона")
 
 
 class UserInSchema(UserBaseSchema):
