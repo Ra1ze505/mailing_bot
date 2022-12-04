@@ -32,3 +32,9 @@ class IRateByDay(abc.ABC):
     @abc.abstractmethod
     async def __call__(self, event: events.NewMessage.Event) -> None:
         ...
+
+
+class IGetNewsByDay(abc.ABC):
+    @abc.abstractmethod
+    async def __call__(self, event: events.NewMessage.Event) -> None:
+        ...

@@ -2,11 +2,13 @@ from dependency_injector import containers, providers
 
 from src.domain.handlers.use_cases.change_city import ChangeCity
 from src.domain.handlers.use_cases.change_time_mailing import ChangeTimeMailing
+from src.domain.handlers.use_cases.news import GetNewsByDay
 from src.domain.handlers.use_cases.rate import RateByDay
 from src.domain.handlers.use_cases.start import StartHandler
 from src.domain.handlers.use_cases.weather import WeatherByDayHandler, WeatherHandler
 from src.domain.mailing.use_cases.bulk_mailing import BulkMailing
 from src.domain.mailing.use_cases.mailing import Mailing
+from src.domain.news.use_cases.get_current_news import GetCurrentNews
 from src.domain.news.use_cases.parse_last_news import ParseLastNews
 from src.domain.rate.use_cases.get_current_rate import GetCurrentRate
 from src.domain.rate.use_cases.parse_current_rate import ParseCurrentRate
@@ -33,6 +35,7 @@ class UseCasesContainer(containers.DeclarativeContainer):
     get_weather_city = providers.Factory(GetWeatherCity, weather_repo=repos.weather)
 
     get_current_rate = providers.Factory(GetCurrentRate, rate_repository=repos.rate_repo)
+    get_current_news = providers.Factory(GetCurrentNews, news_repository=repos.news_repo)
 
     mailing = providers.Factory(Mailing, bot=repos.bot_repo)
     bulk_mailing = providers.Factory(
@@ -78,3 +81,4 @@ class UseCasesContainer(containers.DeclarativeContainer):
         user_repo=repos.user_repo,
     )
     rate_by_day = providers.Factory(RateByDay, get_current_rate=get_current_rate)
+    get_news_by_day = providers.Factory(GetNewsByDay, get_current_news=get_current_news)

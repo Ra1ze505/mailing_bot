@@ -6,7 +6,7 @@ from src.handlers.handlers import (
     about_handler,
     change_city_handler,
     change_time_mailing_handler,
-    help_handler,
+    news_handler,
     rate_handler,
     start_handler,
     weather_handler,

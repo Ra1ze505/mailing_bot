@@ -1,6 +1,7 @@
 from telethon import TelegramClient, events
 
 from src.containers.container import container
+from src.domain.handlers.buttons import start_markup
 
 bot: TelegramClient = container.gateways.bot()
 
@@ -44,8 +45,9 @@ async def rate_handler(event: events.NewMessage.Event) -> None:
 
 
 @bot.on(events.NewMessage(pattern=r"Новости$"))
-async def help_handler(event: events.NewMessage.Event) -> None:
-    ...
+async def news_handler(event: events.NewMessage.Event) -> None:
+    use_case = container.use_cases.get_news_by_day()
+    await use_case(event)
 
 
 @bot.on(events.NewMessage(pattern=r"Написать\sнам$"))
@@ -55,4 +57,8 @@ async def write_us_handler(event: events.NewMessage.Event) -> None:
 
 @bot.on(events.NewMessage(pattern=r"О боте$"))
 async def about_handler(event: events.NewMessage.Event) -> None:
-    ...
+    await event.respond(
+        "Этот бот предназначен для получения новостей, погоды и курса валют.\n"
+        "Код бота можно посмотреть [здесь](https://github.com/Ra1ze505/NewsBot)",
+        buttons=start_markup,
+    )
