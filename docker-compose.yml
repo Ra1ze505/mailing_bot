@@ -1,6 +1,41 @@
 version: '3.3'
 
 services:
+  bot:
+    restart: always
+    build:
+      context: .
+    entrypoint:
+      - /usr/app/bot_entrypoint.sh
+    volumes:
+      - ./:/usr/app/
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A src.worker.tasks.app worker -B -E
+    volumes:
+      - ./:/usr/app/
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.db
+    ports:
+      - 5432:5432
+
   redis:
     image: redis
     restart: always
@@ -16,9 +51,10 @@ services:
   flower:
     image: mher/flower
     env_file:
-      - ./.env
+      - .env
     ports:
       - 5555:5555
 
 volumes:
   redis-data:
+  postgres_data:

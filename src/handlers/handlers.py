@@ -59,6 +59,6 @@ async def write_us_handler(event: events.NewMessage.Event) -> None:
 async def about_handler(event: events.NewMessage.Event) -> None:
     await event.respond(
         "Этот бот предназначен для получения новостей, погоды и курса валют.\n"
-        "Код бота можно посмотреть [здесь](https://github.com/Ra1ze505/NewsBot)",
+        "Код бота можно посмотреть [здесь](https://github.com/Ra1ze505/mailing_bot)",
         buttons=start_markup,
     )
