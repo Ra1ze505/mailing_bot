@@ -28,13 +28,13 @@ async def change_time_mailing_handler(event: events.NewMessage.Event) -> None:
 
 @bot.on(events.NewMessage(pattern=r"Погода$"))
 async def weather_handler(event: events.NewMessage.Event) -> None:
-    use_case = await container.use_cases.weather_handler()
+    use_case = container.use_cases.weather_handler()
     await use_case(event)
 
 
 @bot.on(events.CallbackQuery(pattern=r"weather_by_day"))
 async def weather_by_day_handler(event: events.CallbackQuery.Event) -> None:
-    use_case = await container.use_cases.weather_by_day_handler()
+    use_case = container.use_cases.weather_by_day_handler()
     await use_case(event)
 
 

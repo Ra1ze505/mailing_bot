@@ -68,7 +68,7 @@ filterwarnings = [
 asyncio_mode = "auto"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 dependency-injector = "^4.40.0"
 pydantic = "^1.10.2"
 sentry-sdk = "^1.9.8"
@@ -97,6 +97,7 @@ httpx = "^0.23.0"
 typer = { version = "^0.6.1", extras = ["all"] }
 celery = "^5.2.7"
 redis = "^4.3.1"
+sqlalchemy-filterset = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 # Formatting

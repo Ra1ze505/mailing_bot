@@ -1,6 +1,5 @@
 import httpx
 from aiocache import cached
-from httpx import AsyncClient
 
 from src.common.exceptions.weather import WeatherException
 from src.common.utils import serialize
@@ -22,11 +21,7 @@ class WeatherApiRepository(IWeatherRepository):
     @cached(ttl=60, noself=True)
     async def get_weather_now(self, city: str) -> WeatherNowOutSchema:
         params = self._base_params()
-        params.update(
-            {
-                "q": city,
-            }
-        )
+        params.update({"q": city})
         async with httpx.AsyncClient() as client:
             response = await client.get(self.base_url + "weather", params=params)
             if response.status_code == 200:
@@ -35,7 +30,7 @@ class WeatherApiRepository(IWeatherRepository):
                 raise WeatherException(response.text)
 
     @serialize
-    @cached(ttl=60, noself=True)
+    @cached(ttl=120, noself=True)
     async def get_weather_forecast(self, city: str) -> WeatherForecastSchema:
         params = self._base_params()
         params.update(

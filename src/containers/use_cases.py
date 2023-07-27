@@ -43,6 +43,8 @@ class UseCasesContainer(containers.DeclarativeContainer):
         user_repo=repos.user_repo,
         get_weather_forecast_pretty=get_weather_forecast_pretty,
         bot=repos.bot_repo,
+        get_current_news=get_current_news,
+        get_current_rate=get_current_rate,
     )
 
     # Parser
@@ -66,7 +68,7 @@ class UseCasesContainer(containers.DeclarativeContainer):
     )
     weather_by_day_handler = providers.Factory(
         WeatherByDayHandler,
-        get_weather_forecast=get_weather_forecast,
+        get_weather_forecast_pretty=get_weather_forecast_pretty,
         get_or_create_user=get_or_create_user,
     )
     change_city = providers.Factory(

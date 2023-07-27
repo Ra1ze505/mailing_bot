@@ -1,13 +1,15 @@
 import copy
-from typing import Generic, Protocol, Type
+from typing import Generic, Type
+from uuid import UUID
 
-from pydantic import parse_obj_as
+from pydantic import BaseModel, parse_obj_as
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import Select
+from sqlalchemy_filterset import AsyncFilterSet
 
-from src.common.db import Base, Database
+from src.common.db import Database
 from src.common.exceptions.db import NotFoundException
 from src.common.repo.interfaces import IBaseRepository, ModelType, SchemaOutType
 
@@ -18,6 +20,7 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
     schema: Type[SchemaOutType]
     query: Select | None = None
     db: Database
+    filter_set: Type[AsyncFilterSet]
 
     def __init__(self, db: Database):
         self.db = db
@@ -70,7 +73,7 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
 
         return parse_obj_as(self.schema, obj)
 
-    async def get(self, obj_id: int) -> SchemaOutType:
+    async def get(self, obj_id: int | UUID) -> SchemaOutType:
         q = self.get_query().where(self.model.id == obj_id)
         result = await self.session.execute(q)
         try:

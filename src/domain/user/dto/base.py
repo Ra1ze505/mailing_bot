@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from src.common.dto.base import BaseOutputSchema, OrmModel
 

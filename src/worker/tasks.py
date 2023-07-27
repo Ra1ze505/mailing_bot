@@ -11,18 +11,19 @@ app = container.gateways.celery()
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender: Celery, **kwargs: dict) -> None:
-
-    # sender.add_periodic_task(
-    #     crontab(minute="*"),
-    #     mailing.s(),
-    #     name="add every minute",
-    # )
-    sender.add_periodic_task(crontab(minute="*"), parse.s())
+    sender.add_periodic_task(crontab(hour="*"), parse.s())
+    sender.add_periodic_task(crontab(minute="*"), mailing.s())
 
 
 @app.task()
 def mailing() -> None:
-    ...
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(_mailing())
+
+
+async def _mailing() -> None:
+    bulk_mailing = await container.use_cases.bulk_mailing()
+    await bulk_mailing()
 
 
 @app.task(autoretry_for=(Exception,), retry_kwargs={"max_retries": 5})
