@@ -4,3 +4,4 @@
 *pycache*
 celerybeat-schedule.db
 *logs/*
+celerybeat-schedule
