@@ -1,9 +1,13 @@
+from loguru import logger
 from telethon import TelegramClient, events
 
 from src.containers.container import container
 from src.domain.handlers.buttons import start_markup
 
+container.gateways.logging_setup.init()  # type: ignore
+logger.info("Configure bot...")
 bot: TelegramClient = container.gateways.bot()
+logger.info("Start handling...")
 
 
 @bot.on(events.NewMessage(pattern="/start"))

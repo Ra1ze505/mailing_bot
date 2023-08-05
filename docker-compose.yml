@@ -8,7 +8,7 @@ services:
     entrypoint:
       - /usr/app/bot_entrypoint.sh
     volumes:
-      - ./:/usr/app/
+      - ./bot_logs:/usr/app/logs
     depends_on:
       - db
     env_file:
@@ -20,7 +20,7 @@ services:
       context: .
     command: celery -A src.worker.tasks.app worker -B -E
     volumes:
-      - ./:/usr/app/
+      - ./celery_logs:/usr/app/logs
     depends_on:
       - db
       - redis

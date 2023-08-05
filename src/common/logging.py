@@ -1,5 +1,6 @@
 import logging
 import sys
+from datetime import timedelta
 
 import loguru
 
@@ -30,4 +31,13 @@ def setup_logging(config: dict) -> None:
             logging.getLogger(name).handlers.clear()
         logging.getLogger(name).handlers = [InterceptHandler()]
         logging.getLogger(name).propagate = False
-    loguru.logger.configure(handlers=[{"sink": sys.stdout, "serialize": config["serializer"]}])
+    loguru.logger.configure(
+        handlers=[
+            {"sink": sys.stdout, "serialize": config["serializer"]},
+            {
+                "sink": "logs/app.log",
+                "serialize": config["serializer"],
+                "rotation": timedelta(days=1),
+            },
+        ]
+    )
