@@ -23,7 +23,6 @@ def mailing() -> None:
 
 
 async def _mailing() -> None:
-    await container.init_resources()  # type: ignore
     db: Database = container.gateways.db()
     async with db.database_scope():
         bulk_mailing = await container.use_cases.bulk_mailing()
@@ -37,7 +36,6 @@ def parse() -> None:
 
 
 async def _parse() -> None:
-    await container.init_resources()  # type: ignore
     db: Database = container.gateways.db()
     async with db.database_scope():
         parse_news = await container.use_cases.parse_last_news()
