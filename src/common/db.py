@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import (
     async_scoped_session,
     create_async_engine,
 )
-from sqlalchemy.orm import as_declarative, declarative_base, declared_attr, sessionmaker
+from sqlalchemy.orm import as_declarative, declared_attr, sessionmaker
 
 
 class Database:

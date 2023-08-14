@@ -76,7 +76,7 @@ loguru = "^0.6.0"
 Telethon = "^1.25.1"
 
 # DB
-SQLAlchemy = { version = ">=1.4.40,<2", extras = ["asyncio", "mypy"] }
+SQLAlchemy = { version = "1.4.40", extras = ["asyncio", "mypy"] }
 SQLAlchemy-Utils = "~0.38.2"
 alembic = {version = "~1.8.1", extras = ["tz"]}
 asyncpg = ">=0.26.0"
