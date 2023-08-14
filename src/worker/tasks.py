@@ -29,7 +29,7 @@ async def _mailing() -> None:
         await bulk_mailing()
 
 
-@app.task(autoretry_for=(Exception,), retry_kwargs={"max_retries": 5})
+@app.task()
 def parse() -> None:
     loop = asyncio.get_event_loop()
     loop.run_until_complete(_parse())
