@@ -12,7 +12,7 @@ app = container.gateways.celery()
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender: Celery, **kwargs: dict) -> None:
-    sender.add_periodic_task(crontab(hour="*"), parse.s())
+    sender.add_periodic_task(crontab(hour="*", minute=30), parse.s())
     sender.add_periodic_task(crontab(minute="*"), mailing.s())
 
 
