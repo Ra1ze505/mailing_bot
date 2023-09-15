@@ -7,7 +7,7 @@ from src.common.db import Database
 from src.containers.container import container
 
 container.gateways.logging_setup.init()  # type: ignore
-app = container.gateways.celery()
+app: Celery = container.gateways.celery()
 
 
 @app.on_after_configure.connect
