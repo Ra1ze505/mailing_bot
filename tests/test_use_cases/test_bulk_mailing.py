@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 
 from src.containers.container import Container
-from src.data.models import User
+from src.data.models import Users
 from src.domain.bot.interfaces import IBotRepository
 from tests.factories.user import UserFactory
 
@@ -45,7 +45,7 @@ async def weather_mock(container: Container) -> AsyncGenerator[BotMock, None]:
 
 
 async def test_bulk_mailing(container: Container, bot_mock: BotMock) -> None:
-    users: list[User] = await UserFactory.create_batch(3)
+    users: list[Users] = await UserFactory.create_batch(3)
     current_time = datetime.datetime.now()
     time_mailing = datetime.time(hour=current_time.hour, minute=current_time.minute)
     for user in users:

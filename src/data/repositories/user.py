@@ -4,12 +4,12 @@ from pydantic import parse_obj_as
 from sqlalchemy import select
 
 from src.common.repo.base import BaseRepository
-from src.data.models import User
+from src.data.models import Users
 from src.domain.user.dto.base import UserOutSchema
 
 
 class UserRepository(BaseRepository):
-    model = User
+    model = Users
     schema = UserOutSchema
 
     async def get_by_sending_time(self, time_mailing: time) -> list[UserOutSchema]:

@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, Time
 from src.common.db import Base
 
 
-class User(Base):
+class Users(Base):
     __table_args__ = {"extend_existing": True}
     __mapper_args__ = {"eager_defaults": True}
     id: int = Column(Integer, primary_key=True, index=True)

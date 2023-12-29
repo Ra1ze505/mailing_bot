@@ -1,6 +1,6 @@
 import factory
 
-from src.data.models import User
+from src.data.models import Users
 from tests.async_alchemy_factory import AsyncSQLAlchemyModelFactory
 
 
@@ -12,4 +12,4 @@ class UserFactory(AsyncSQLAlchemyModelFactory):
     timezone = factory.Sequence(lambda n: n)
 
     class Meta:
-        model = User
+        model = Users

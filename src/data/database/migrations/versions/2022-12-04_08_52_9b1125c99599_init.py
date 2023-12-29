@@ -34,7 +34,7 @@ def upgrade():
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
-        "user",
+        "users",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("chat_id", sa.Integer(), nullable=True),
         sa.Column("username", sa.String(), nullable=False),
