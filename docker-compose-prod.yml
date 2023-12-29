@@ -9,8 +9,6 @@ services:
       - /usr/app/bot_entrypoint.sh
     volumes:
       - ./bot_logs:/usr/app/logs
-    depends_on:
-      - db
     env_file:
       - .env
 
@@ -22,7 +20,6 @@ services:
     volumes:
       - ./celery_logs:/usr/app/logs
     depends_on:
-      - db
       - redis
     env_file:
       - .env
