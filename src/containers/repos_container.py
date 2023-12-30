@@ -1,5 +1,4 @@
 from dependency_injector import containers, providers
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.common.db import Database
 from src.data.repositories.bot import BotRepository
@@ -14,7 +13,6 @@ from src.domain.weather.interfaces import IWeatherRepository
 class ReposContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
     db: providers.Provider[Database] = providers.Dependency()
-    session: providers.Provider[AsyncSession] = providers.Dependency()
     gateways = providers.DependenciesContainer()
 
     bot_repo = providers.Factory(BotRepository, bot=gateways.bot)
