@@ -1,5 +1,6 @@
 import copy
-from typing import Generic, Type
+from contextlib import AbstractAsyncContextManager
+from typing import Callable, Generic, Type
 from uuid import UUID
 
 from pydantic import BaseModel, parse_obj_as
@@ -22,9 +23,8 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
     db: Database
     filter_set: Type[AsyncFilterSet]
 
-    def __init__(self, db: Database, session: AsyncSession):
-        self.db = db
-        self.session = session
+    def __init__(self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]):
+        self.session_factory = session_factory
 
     def get_query(self) -> Select:
         query = self.query if self.query is not None else select(self.model)
@@ -32,53 +32,58 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
 
     async def create(self, data: dict) -> SchemaOutType:
         obj = self.model(**data)
-        self.session.add(obj)
-        await self.commit()
+        async with self.session_factory() as session:
+            session.add(obj)
+            await session.commit()
 
-        q = (
-            self.get_query()
-            .where(self.model.id == obj.id)
-            .execution_options(populate_existing=True)
-        )
-        result = await self.session.execute(q)
-        obj = result.unique().scalars().one()
+            q = (
+                self.get_query()
+                .where(self.model.id == obj.id)
+                .execution_options(populate_existing=True)
+            )
+            result = await session.execute(q)
+            obj = result.unique().scalars().one()
 
-        return parse_obj_as(self.schema, obj)
+            return parse_obj_as(self.schema, obj)
 
     async def update(self, object_id: int, data: dict) -> SchemaOutType:
         q = self.get_query().where(self.model.id == object_id)
-        result = await self.session.execute(q)
-        try:
+        async with self.session_factory() as session:
+
+            result = await session.execute(q)
+            try:
+                obj = result.unique().scalars().one()
+            except NoResultFound:
+                raise NotFoundException
+
+            for key, val in data.items():
+                setattr(obj, key, val)
+
+            session.add(obj)
+
+            await session.commit()
+
+            q = (
+                self.get_query()
+                .where(self.model.id == obj.id)
+                .execution_options(populate_existing=True)
+            )
+            result = await session.execute(q)
             obj = result.unique().scalars().one()
-        except NoResultFound:
-            raise NotFoundException
 
-        for key, val in data.items():
-            setattr(obj, key, val)
-
-        self.session.add(obj)
-
-        await self.commit()
-
-        q = (
-            self.get_query()
-            .where(self.model.id == obj.id)
-            .execution_options(populate_existing=True)
-        )
-        result = await self.session.execute(q)
-        obj = result.unique().scalars().one()
-
-        return parse_obj_as(self.schema, obj)
+            return parse_obj_as(self.schema, obj)
 
     async def get(self, obj_id: int | UUID) -> SchemaOutType:
         q = self.get_query().where(self.model.id == obj_id)
-        result = await self.session.execute(q)
-        try:
-            obj = result.unique().scalars().one()
-        except NoResultFound:
-            raise NotFoundException
+        async with self.session_factory() as session:
 
-        return parse_obj_as(self.schema, obj)
+            result = await session.execute(q)
+            try:
+                obj = result.unique().scalars().one()
+            except NoResultFound:
+                raise NotFoundException
+
+            return parse_obj_as(self.schema, obj)
 
     async def get_or_create(self, data: dict) -> SchemaOutType:
         try:
@@ -91,10 +96,3 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
             return await self.update(data["id"], data)
         except NotFoundException:
             return await self.create(data)
-
-    async def commit(self) -> None:
-        try:
-            await self.session.commit()
-        except Exception as e:
-            await self.session.rollback()
-            raise e

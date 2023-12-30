@@ -28,6 +28,6 @@ class ReposContainer(containers.DeclarativeContainer):
         WeatherApiRepository,
         config=config.open_weather,
     )
-    user_repo = providers.Factory(UserRepository, db=db, session=session)
-    news_repo = providers.Factory(NewsRepository, db=db, session=session)
-    rate_repo = providers.Factory(RateRepository, db=db, session=session)
+    user_repo = providers.Factory(UserRepository, session_factory=db.provided.session)
+    news_repo = providers.Factory(NewsRepository, session_factory=db.provided.session)
+    rate_repo = providers.Factory(RateRepository, session_factory=db.provided.session)

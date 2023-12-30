@@ -41,9 +41,16 @@ class Database:
         scope_str = self.current_context.get()
         return scope_str
 
-    @property
-    def session(self) -> AsyncSession:
-        return cast(AsyncSession, self.scoped_session())  # type: ignore
+    @asynccontextmanager
+    async def session(self) -> AsyncGenerator[AsyncSession, None]:
+        sess = self.scoped_session()
+        try:
+            yield sess
+        except Exception:
+            await sess.rollback()
+            raise
+        finally:
+            await sess.close()
 
     @asynccontextmanager
     async def database_scope(self, **kwargs: Any) -> AsyncGenerator["Database", None]:

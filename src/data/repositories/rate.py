@@ -13,5 +13,6 @@ class RateRepository(BaseRepository):
 
     async def get_last_rate(self) -> RateOutSchema:
         stmt = select(self.model).order_by(self.model.date.desc()).limit(1)
-        result = await self.session.execute(stmt)
-        return parse_obj_as(self.schema, result.scalar_one())
+        async with self.session_factory() as session:
+            result = await session.execute(stmt)
+            return parse_obj_as(self.schema, result.scalar_one())
