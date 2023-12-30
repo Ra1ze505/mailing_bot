@@ -18,7 +18,9 @@ class Container(BaseAppContainer):
 
     config = providers.Configuration(pydantic_settings=[app_config])
     gateways = providers.Container(Gateways, config=config)
-    repos = providers.Container(ReposContainer, config=config, db=gateways.db, gateways=gateways)
+    repos = providers.Container(
+        ReposContainer, config=config, db=gateways.db, gateways=gateways, session=gateways.session
+    )
     use_cases = providers.Container(UseCasesContainer, repos=repos, config=config)
 
 
