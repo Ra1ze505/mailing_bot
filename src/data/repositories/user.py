@@ -14,5 +14,5 @@ class UserRepository(BaseRepository):
 
     async def get_by_sending_time(self, time_mailing: time) -> list[UserOutSchema]:
         stmt = select(self.model).where(self.model.time_mailing == time_mailing)
-        result = (await self.db.session.execute(stmt)).scalars().all()
+        result = (await self.session.execute(stmt)).scalars().all()
         return [parse_obj_as(self.schema, obj) for obj in result]

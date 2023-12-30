@@ -22,12 +22,9 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
     db: Database
     filter_set: Type[AsyncFilterSet]
 
-    def __init__(self, db: Database):
+    def __init__(self, db: Database, session: AsyncSession):
         self.db = db
-
-    @property
-    def session(self) -> AsyncSession:
-        return self.db.session
+        self.session = session
 
     def get_query(self) -> Select:
         query = self.query if self.query is not None else select(self.model)
