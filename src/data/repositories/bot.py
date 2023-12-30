@@ -5,7 +5,7 @@ from src.domain.bot.interfaces import IBotRepository
 
 
 class BotRepository(IBotRepository):
-    def __init__(self, db: Database, bot: TelegramClient):
+    def __init__(self, bot: TelegramClient):
         self.bot = bot
 
     async def send_message(self, to: int, msg: str) -> None:
