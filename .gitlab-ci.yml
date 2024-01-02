@@ -29,8 +29,6 @@ test:
   stage: test
   only:
     - branches
-  when: manual
-  allow_failure: true
   script:
     - docker load -i docker_images/image.tar
     - export TEST_RUNNER_IMAGE=$CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
