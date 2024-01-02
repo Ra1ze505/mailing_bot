@@ -32,13 +32,10 @@ class CreateFeedBack(ICreateFeedBack):
         fb = FeedBackInSchema(user_id=user.id, message=answer.text)
         feedback = await self.feedback_repo.create(fb.dict())
         try:
-            async with self.bot_repo as bot:
-                await bot.send_message(
-                    self.admin_tg_id,
-                    ADMIN_NOTIFICATION_MESSAGE.format(
-                        username=user.username, message=feedback.message
-                    ),
-                )
+            await self.bot_repo.send_message(
+                self.admin_tg_id,
+                ADMIN_NOTIFICATION_MESSAGE.format(username=user.username, message=feedback.message),
+            )
         except Exception as e:
             logger.warning(f"Error when try send feedback for admin: {e}")
         finally:
