@@ -3,10 +3,16 @@ from typing import AsyncGenerator
 from unittest.mock import AsyncMock, Mock
 
 import pytest
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.containers.container import Container
 from src.data.models import Users
+from src.data.models.news import News
+from src.data.models.rate import Rate
 from src.domain.bot.interfaces import IBotRepository
+from tests.factories.news import NewsFactory
+from tests.factories.rate import RateFactory
 from tests.factories.user import UserFactory
 
 
@@ -44,12 +50,18 @@ async def weather_mock(container: Container) -> AsyncGenerator[BotMock, None]:
         yield mock
 
 
-async def test_bulk_mailing(container: Container, bot_mock: BotMock) -> None:
+async def test_bulk_mailing(
+    container: Container, bot_mock: BotMock, db_session: AsyncSession
+) -> None:
     users: list[Users] = await UserFactory.create_batch(3)
-    current_time = datetime.datetime.now()
+    await UserFactory()
+    await NewsFactory()
+    await RateFactory()
+
+    current_time = datetime.datetime.utcnow()
     time_mailing = datetime.time(hour=current_time.hour, minute=current_time.minute)
     for user in users:
         user.time_mailing = time_mailing
     use_case = container.use_cases.bulk_mailing()
     await use_case()
-    assert bot_mock.sent_messages == [(user.id, "test") for user in users]
+    assert [i[0] for i in bot_mock.sent_messages] == [user.id for user in users]

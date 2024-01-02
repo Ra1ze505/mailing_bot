@@ -12,6 +12,6 @@ class NewsRepository(BaseRepository):
 
     async def get_last_news(self) -> NewsOutSchema:
         stmt = select(self.model).order_by(self.model.created_at.desc()).limit(1)
-        async with self.session_factory() as session:
+        async with self.db.session() as session:
             result = await session.execute(stmt)
             return parse_obj_as(self.schema, result.scalar_one())

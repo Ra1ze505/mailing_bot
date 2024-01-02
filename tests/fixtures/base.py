@@ -11,7 +11,7 @@ from alembic.config import Config
 from alembic.script import Script, ScriptDirectory
 from dependency_injector import providers
 from pytest_async_sqlalchemy import create_database, drop_database
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, AsyncSessionTransaction, session
 from sqlalchemy.orm import sessionmaker
 
 from src.common.container import BaseAppContainer
@@ -128,6 +128,19 @@ def migration_revisions(migrations_alembic_config: Config, migrate_to: str) -> l
     return revisions
 
 
+class MockDatabase:
+    def __init__(self, session: AsyncSession):
+        self.sess = session
+
+    @asynccontextmanager
+    async def session(self) -> AsyncGenerator[AsyncSession, None]:
+        yield self.sess
+
+    @asynccontextmanager
+    async def database_scope(self, **kwargs: Any) -> AsyncGenerator["MockDatabase", None]:
+        yield self
+
+
 @pytest.fixture()
 async def db_session(sqla_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, None]:
     connection = await sqla_engine.connect()
@@ -144,11 +157,6 @@ async def db_session(sqla_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, N
         await connection.close()
 
 
-@pytest.fixture()
-async def dbsession(db_session: AsyncSession) -> AsyncGenerator[AsyncSession, None]:
-    yield db_session
-
-
 @pytest.fixture(scope="session")
 def init_database() -> Callable:
     return Base.metadata.create_all
@@ -162,19 +170,10 @@ def init_factories(db_session: AsyncSession) -> None:
 
 @pytest.fixture(autouse=True)
 async def override_session_in_container(
-    db_session: AsyncSession,
+    db_session: AsyncEngine,
     container: BaseAppContainer,
 ) -> None:
     """Замена сессии в контейнере БД"""
-
-    class MockDatabase:
-        def __init__(self, session: AsyncSession):
-            self.session = session
-            self.session_factory = lambda: session
-
-        @asynccontextmanager
-        async def database_scope(self, **kwargs: Any) -> AsyncGenerator["MockDatabase", None]:
-            yield self
 
     db = providers.Singleton(MockDatabase, db_session)
     if hasattr(container.gateways, "db"):

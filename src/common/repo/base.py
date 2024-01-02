@@ -23,8 +23,8 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
     db: Database
     filter_set: Type[AsyncFilterSet]
 
-    def __init__(self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]):
-        self.session_factory = session_factory
+    def __init__(self, db: Database):
+        self.db = db
 
     def get_query(self) -> Select:
         query = self.query if self.query is not None else select(self.model)
@@ -32,7 +32,7 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
 
     async def create(self, data: dict) -> SchemaOutType:
         obj = self.model(**data)
-        async with self.session_factory() as session:
+        async with self.db.session() as session:
             session.add(obj)
             await session.commit()
 
@@ -48,7 +48,7 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
 
     async def update(self, object_id: int, data: dict) -> SchemaOutType:
         q = self.get_query().where(self.model.id == object_id)
-        async with self.session_factory() as session:
+        async with self.db.session() as session:
 
             result = await session.execute(q)
             try:
@@ -75,7 +75,7 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
 
     async def get(self, obj_id: int | UUID) -> SchemaOutType:
         q = self.get_query().where(self.model.id == obj_id)
-        async with self.session_factory() as session:
+        async with self.db.session() as session:
 
             result = await session.execute(q)
             try:

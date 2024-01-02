@@ -27,7 +27,7 @@ class ReposContainer(containers.DeclarativeContainer):
         WeatherApiRepository,
         config=config.open_weather,
     )
-    user_repo = providers.Factory(UserRepository, session_factory=db.provided.session)
-    news_repo = providers.Factory(NewsRepository, session_factory=db.provided.session)
-    rate_repo = providers.Factory(RateRepository, session_factory=db.provided.session)
-    feedback_repo = providers.Factory(FeedBackRepository, session_factory=db.provided.session)
+    user_repo = providers.Factory(UserRepository, db=db)
+    news_repo = providers.Factory(NewsRepository, db=db)
+    rate_repo = providers.Factory(RateRepository, db=db)
+    feedback_repo = providers.Factory(FeedBackRepository, db=db)
