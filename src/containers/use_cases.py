@@ -12,6 +12,7 @@ from src.domain.news.use_cases.get_current_news import GetCurrentNews
 from src.domain.news.use_cases.parse_last_news import ParseLastNews
 from src.domain.rate.use_cases.get_current_rate import GetCurrentRate
 from src.domain.rate.use_cases.parse_current_rate import ParseCurrentRate
+from src.domain.user.use_cases.feedback import CreateFeedBack
 from src.domain.user.use_cases.get_or_create import GetOrCreateUser
 from src.domain.weather.use_cases.get_city_weather import GetWeatherCity
 from src.domain.weather.use_cases.get_weather_forecast import (
@@ -84,3 +85,10 @@ class UseCasesContainer(containers.DeclarativeContainer):
     )
     rate_by_day = providers.Factory(RateByDay, get_current_rate=get_current_rate)
     get_news_by_day = providers.Factory(GetNewsByDay, get_current_news=get_current_news)
+    create_feedback = providers.Factory(
+        CreateFeedBack,
+        get_or_create_user=get_or_create_user,
+        feedback_repo=repos.fedback_repo,
+        bot_repo=repos.bot_repo,
+        admin_tg_id=config.admin_tg_id,
+    )

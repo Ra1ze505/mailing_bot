@@ -19,3 +19,17 @@ class UserOutSchema(UserBaseSchema, BaseOutputSchema):
 
 class UserInSchema(UserBaseSchema):
     ...
+
+
+class FeedBackBaseSchema(OrmModel):
+    user_id: int = Field(..., description="Идентификатор пользователя")
+    message: str = Field(..., description="Отзыв")
+
+
+class FeedBackOutSchema(FeedBackBaseSchema, BaseOutputSchema):
+    id: int = Field(..., description="Идентификатор отзыва")
+    send_time: datetime.datetime = Field(..., description="Время получения отзыва")
+
+
+class FeedBackInSchema(FeedBackBaseSchema):
+    ...

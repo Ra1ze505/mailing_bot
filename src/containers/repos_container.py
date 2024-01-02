@@ -2,6 +2,7 @@ from dependency_injector import containers, providers
 
 from src.common.db import Database
 from src.data.repositories.bot import BotRepository
+from src.data.repositories.feedback import FeedBackRepository
 from src.data.repositories.news import NewsRepository
 from src.data.repositories.parse import ParseNewsRepository, ParseRateRepository
 from src.data.repositories.rate import RateRepository
@@ -29,3 +30,4 @@ class ReposContainer(containers.DeclarativeContainer):
     user_repo = providers.Factory(UserRepository, session_factory=db.provided.session)
     news_repo = providers.Factory(NewsRepository, session_factory=db.provided.session)
     rate_repo = providers.Factory(RateRepository, session_factory=db.provided.session)
+    feedback_repo = providers.Factory(FeedBackRepository, session_factory=db.provided.session)

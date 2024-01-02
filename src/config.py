@@ -120,3 +120,4 @@ class Settings(BaseSettings):
     broker: BrokerConfig = BrokerConfig()
     parse: ParseConfig = ParseConfig()
     rate: RateConfig = RateConfig()
+    admin_tg_id: int = 1111111

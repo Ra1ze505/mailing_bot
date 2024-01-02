@@ -1,0 +1,40 @@
+from loguru import logger
+from telethon import events
+
+from src.domain.bot.interfaces import IBotRepository
+from src.domain.user.dto.base import FeedBackInSchema, FeedBackOutSchema, UserOutSchema
+from src.domain.user.interfaces import ICreateFeedBack, IFeedBackRepository
+from src.domain.user.use_cases.get_or_create import GetOrCreateUser
+
+ADMIN_NOTIFICATION_MESSAGE: str = "Новое сообщение от @{username}\n```\n{message}\n```"
+
+
+class CreateFeedBack(ICreateFeedBack):
+    def __init__(
+        self,
+        get_or_create_user: GetOrCreateUser,
+        feedback_repo: IFeedBackRepository,
+        bot_repo: IBotRepository,
+        admin_tg_id: int,
+    ):
+        self.get_or_create_user: GetOrCreateUser = get_or_create_user
+        self.feedback_repo = feedback_repo
+        self.bot_repo = bot_repo
+        self.admin_tg_id = admin_tg_id
+
+    async def __call__(self, event: events.NewMessage.Event) -> FeedBackOutSchema:
+        user: UserOutSchema = await self.get_or_create_user(event)
+        fb = FeedBackInSchema(user_id=user.id, message=event.message)
+        feedback = await self.feedback_repo.create(fb.dict())
+        try:
+            async with self.bot_repo as bot:
+                await bot.send_message(
+                    self.admin_tg_id,
+                    ADMIN_NOTIFICATION_MESSAGE.format(
+                        username=user.username, message=feedback.message
+                    ),
+                )
+        except Exception as e:
+            logger.warning(f"Error when try send feedback for admin: {e}")
+        finally:
+            return feedback
