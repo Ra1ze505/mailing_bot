@@ -88,7 +88,7 @@ class UseCasesContainer(containers.DeclarativeContainer):
     create_feedback = providers.Factory(
         CreateFeedBack,
         get_or_create_user=get_or_create_user,
-        feedback_repo=repos.fedback_repo,
+        feedback_repo=repos.feedback_repo,
         bot_repo=repos.bot_repo,
         admin_tg_id=config.admin_tg_id,
     )
