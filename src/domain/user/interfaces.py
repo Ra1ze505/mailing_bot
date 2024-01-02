@@ -2,6 +2,7 @@ import abc
 from datetime import time
 
 from telethon import events
+from telethon.tl.custom import Conversation
 
 from src.common.repo.interfaces import IBaseRepository
 from src.domain.user.dto.base import FeedBackOutSchema, UserOutSchema
@@ -23,5 +24,7 @@ class IFeedBackRepository(IBaseRepository[FeedBackOutSchema]):
 
 
 class ICreateFeedBack(abc.ABC):
-    async def __call__(self, event: events.NewMessage.Event) -> FeedBackOutSchema:
+    async def __call__(
+        self, event: events.NewMessage.Event, conv: Conversation
+    ) -> FeedBackOutSchema:
         ...

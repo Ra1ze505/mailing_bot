@@ -56,9 +56,9 @@ async def news_handler(event: events.NewMessage.Event) -> None:
 
 @bot.on(events.NewMessage(pattern=r"Написать\sнам$"))
 async def write_us_handler(event: events.NewMessage.Event) -> None:
-    use_case = container.use_cases.create_feedback()
-    await use_case(event)
-    await event.respond("Спасибо за отзыв!")
+    async with bot.conversation(event.sender_id) as conv:
+        use_case = container.use_cases.create_feedback()
+        await use_case(event, conv)
 
 
 @bot.on(events.NewMessage(pattern=r"О боте$"))

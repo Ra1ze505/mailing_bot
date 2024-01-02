@@ -1,5 +1,6 @@
 from loguru import logger
 from telethon import events
+from telethon.tl.custom import Conversation
 
 from src.domain.bot.interfaces import IBotRepository
 from src.domain.user.dto.base import FeedBackInSchema, FeedBackOutSchema, UserOutSchema
@@ -22,9 +23,13 @@ class CreateFeedBack(ICreateFeedBack):
         self.bot_repo = bot_repo
         self.admin_tg_id = admin_tg_id
 
-    async def __call__(self, event: events.NewMessage.Event) -> FeedBackOutSchema:
+    async def __call__(
+        self, event: events.NewMessage.Event, conv: Conversation
+    ) -> FeedBackOutSchema:
         user: UserOutSchema = await self.get_or_create_user(event)
-        fb = FeedBackInSchema(user_id=user.id, message=event.message)
+        await conv.send_message("Внимательно слушаю :)")
+        answer = await conv.get_response()
+        fb = FeedBackInSchema(user_id=user.id, message=answer.text)
         feedback = await self.feedback_repo.create(fb.dict())
         try:
             async with self.bot_repo as bot:
@@ -37,4 +42,5 @@ class CreateFeedBack(ICreateFeedBack):
         except Exception as e:
             logger.warning(f"Error when try send feedback for admin: {e}")
         finally:
+            conv.send_message("Спасибо за отзыв!")
             return feedback
