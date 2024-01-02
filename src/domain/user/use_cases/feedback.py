@@ -42,5 +42,5 @@ class CreateFeedBack(ICreateFeedBack):
         except Exception as e:
             logger.warning(f"Error when try send feedback for admin: {e}")
         finally:
-            conv.send_message("Спасибо за отзыв!")
+            await conv.send_message("Спасибо за отзыв!")
             return feedback

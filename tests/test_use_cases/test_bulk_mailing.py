@@ -3,41 +3,14 @@ from typing import AsyncGenerator
 from unittest.mock import AsyncMock, Mock
 
 import pytest
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.containers.container import Container
 from src.data.models import Users
-from src.data.models.news import News
-from src.data.models.rate import Rate
-from src.domain.bot.interfaces import IBotRepository
+from tests.conftest import BotMock
 from tests.factories.news import NewsFactory
 from tests.factories.rate import RateFactory
 from tests.factories.user import UserFactory
-
-
-class BotMock(IBotRepository):
-    def __init__(self) -> None:
-        self.sent_messages: list[tuple[int, str]] = []
-        self.entered = False
-
-    async def send_message(self, to: int, msg: str) -> None:
-        if self.entered:
-            self.sent_messages.append((to, msg))
-
-    async def __aenter__(self) -> "BotMock":
-        self.entered = True
-        return self
-
-    async def __aexit__(self, *args: tuple, **kwargs: dict) -> None:
-        self.entered = False
-
-
-@pytest.fixture(autouse=True)
-async def bot_mock(container: Container) -> AsyncGenerator[BotMock, None]:
-    mock = BotMock()
-    with container.repos.bot_repo.override(mock):
-        yield mock
 
 
 @pytest.fixture(autouse=True)
