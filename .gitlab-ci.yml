@@ -1,0 +1,40 @@
+image: docker:latest
+services:
+  - docker:dind
+variables:
+  CONTAINER_IMAGE: $CI_REGISTRY_IMAGE
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: postgres
+  POSTGRES_HOST: postgres
+stages:
+  - build
+  - test
+  - push
+before_script:
+  - apk add --update --no-cache make git
+build:
+  stage: build
+  only:
+    - branches
+  script:
+    - docker build -t $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
+test:
+  stage: test
+  only:
+    - branches
+  script:
+    - docker-compose -f docker-compose-for-tests.yml up -d
+    - docker-compose -f docker-compose-for-tests.yml exec -T test-runner pytest
+    - docker-compose -f docker-compose-for-tests.yml down
+push:
+  stage: push
+  only:
+    - master
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:latest
+    - docker push $CONTAINER_IMAGE:latest
