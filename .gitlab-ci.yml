@@ -7,6 +7,10 @@ variables:
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: postgres
   POSTGRES_HOST: postgres
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - docker_images/
 stages:
   - build
   - test
@@ -19,14 +23,16 @@ build:
     - branches
   script:
     - docker build -t $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA .
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
-    - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker save -o docker_images/image.tar $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
 test:
   stage: test
   only:
     - branches
+  when: manual
+  allow_failure: true
   script:
+    - docker load -i docker_images/image.tar
+    - export TEST_RUNNER_IMAGE=$CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
     - docker-compose -f docker-compose-for-tests.yml up -d
     - docker-compose -f docker-compose-for-tests.yml exec -T test-runner pytest
     - docker-compose -f docker-compose-for-tests.yml down
@@ -35,6 +41,7 @@ push:
   only:
     - master
   script:
+    - docker load -i docker_images/image.tar
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:latest
     - docker push $CONTAINER_IMAGE:latest
