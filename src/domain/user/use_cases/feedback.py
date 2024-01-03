@@ -27,7 +27,7 @@ class CreateFeedBack(ICreateFeedBack):
         self, event: events.NewMessage.Event, conv: Conversation
     ) -> FeedBackOutSchema:
         user: UserOutSchema = await self.get_or_create_user(event)
-        await conv.send_message("Внимательно слушаю :)")
+        await conv.send_message("Внимательно слушаю 😊")
         answer = await conv.get_response()
         fb = FeedBackInSchema(user_id=user.id, message=answer.text)
         feedback = await self.feedback_repo.create(fb.dict())
