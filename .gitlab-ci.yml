@@ -48,6 +48,8 @@ deploy:
   only:
     - master
   script:
+    - kubectl config get-contexts
+    - kubectl config use-context mailing_bot:yandex-k8s
     - kubectl kustomize k8s | kubectl apply -f -
   environment:
     name: production
