@@ -14,4 +14,4 @@ async def test_feedback(container: Container) -> None:
 
     await use_case(event, conv)
 
-    assert event.messages == [(("Внимательно слушаю :)",), {}), (("Спасибо за отзыв!",), {})]
+    assert event.messages == [(("Внимательно слушаю 😊",), {}), (("Спасибо за отзыв!",), {})]
