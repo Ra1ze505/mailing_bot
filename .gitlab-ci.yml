@@ -13,7 +13,6 @@ stages:
   - push
   - deploy
 before_script:
-  - apk add --update --no-cache make git
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 build:
   stage: build
