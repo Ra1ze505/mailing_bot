@@ -15,6 +15,7 @@ stages:
   - build
   - test
   - push
+  - deploy
 before_script:
   - apk add --update --no-cache make git
 build:
@@ -44,3 +45,12 @@ push:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:latest
     - docker push $CONTAINER_IMAGE:latest
+deploy:
+  stage: deploy
+  only:
+    - master
+  script:
+    - kubectl kustomize k8s | kubectl apply -f -
+  environment:
+    name: production
+  when: manual

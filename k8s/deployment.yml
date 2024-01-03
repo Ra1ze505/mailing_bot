@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot
+  template:
+    metadata:
+      labels:
+        app: bot
+    spec:
+      containers:
+        - name: bot
+          image: registry.gitlab.com/ra1ze505/mailing_bot:latest
+          command:
+            - "/usr/app/bot_entrypoint.sh"
+          envFrom:
+            - secretRef:
+                name: env-config
+          volumeMounts:
+            - name: bot-logs
+              mountPath: /usr/app/logs
+      imagePullSecrets:
+        - name: gitlab-registry
+      volumes:
+        - name: bot-logs
+          emptyDir: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery
+  template:
+    metadata:
+      labels:
+        app: celery
+    spec:
+      containers:
+        - name: celery
+          image: registry.gitlab.com/ra1ze505/mailing_bot:latest
+          command:
+            - "celery"
+          args:
+            - "-A"
+            - "src.worker.tasks.app"
+            - "worker"
+            - "-B"
+            - "-E"
+
+          envFrom:
+            - secretRef:
+                name: env-config
+          volumeMounts:
+            - name: celery-logs
+              mountPath: /usr/app/logs
+      imagePullSecrets:
+        - name: gitlab-registry
+
+      volumes:
+        - name: celery-logs
+          emptyDir: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis
+          command: ["redis-server"]
+          workingDir: /data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
