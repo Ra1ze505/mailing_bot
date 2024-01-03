@@ -44,6 +44,7 @@ deploy:
   stage: deploy
   image:
     name: bitnami/kubectl:latest
+    entrypoint: [""]
   only:
     - master
   script:
