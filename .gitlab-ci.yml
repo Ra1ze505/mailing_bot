@@ -12,13 +12,12 @@ stages:
   - test
   - push
   - deploy
-before_script:
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 build:
   stage: build
   only:
     - branches
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA .
     - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
 test:
@@ -26,6 +25,7 @@ test:
   only:
     - branches
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
     - export TEST_RUNNER_IMAGE=$CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
     - docker-compose -f docker-compose-for-tests.yml up -d
@@ -36,6 +36,7 @@ push:
   only:
     - master
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
     - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:latest
     - docker push $CONTAINER_IMAGE:latest
