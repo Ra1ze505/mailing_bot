@@ -42,6 +42,8 @@ push:
     - docker push $CONTAINER_IMAGE:latest
 deploy:
   stage: deploy
+  image:
+    name: bitnami/kubectl:latest
   only:
     - master
   script:
