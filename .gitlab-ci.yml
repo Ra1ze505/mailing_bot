@@ -53,4 +53,3 @@ deploy:
     - kubectl kustomize k8s | kubectl apply -f -
   environment:
     name: production
-  when: manual
