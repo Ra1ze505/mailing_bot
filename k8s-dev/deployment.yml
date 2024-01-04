@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-deployment-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot
+  template:
+    metadata:
+      labels:
+        app: bot
+    spec:
+      containers:
+        - name: bot
+          image: registry.gitlab.com/ra1ze505/mailing_bot:dev
+          command:
+            - "/usr/app/bot_entrypoint.sh"
+          envFrom:
+            - secretRef:
+                name: env-config-dev
+          volumeMounts:
+            - name: bot-logs
+              mountPath: /usr/app/logs
+      imagePullSecrets:
+        - name: gitlab-registry
+      volumes:
+        - name: bot-logs
+          emptyDir: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-deployment-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery
+  template:
+    metadata:
+      labels:
+        app: celery
+    spec:
+      containers:
+        - name: celery
+          image: registry.gitlab.com/ra1ze505/mailing_bot:dev
+          command:
+            - "celery"
+          args:
+            - "-A"
+            - "src.worker.tasks.app"
+            - "worker"
+            - "-B"
+            - "-E"
+
+          envFrom:
+            - secretRef:
+                name: env-config-dev
+          volumeMounts:
+            - name: celery-logs
+              mountPath: /usr/app/logs
+      imagePullSecrets:
+        - name: gitlab-registry
+
+      volumes:
+        - name: celery-logs
+          emptyDir: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-dev
+  template:
+    metadata:
+      labels:
+        app: redis-dev
+    spec:
+      containers:
+        - name: redis-dev
+          image: redis
+          command: ["redis-server"]
+          workingDir: /data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-dev
+spec:
+  selector:
+    app: redis-dev
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379

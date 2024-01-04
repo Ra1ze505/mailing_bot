@@ -7,11 +7,15 @@ variables:
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: postgres
   POSTGRES_HOST: postgres
+
 stages:
   - build
   - test
   - push
   - deploy
+  - push-dev
+  - deploy-dev
+
 build:
   stage: build
   only:
@@ -20,6 +24,7 @@ build:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA .
     - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
+
 test:
   stage: test
   only:
@@ -31,6 +36,7 @@ test:
     - docker-compose -f docker-compose-for-tests.yml up -d
     - docker-compose -f docker-compose-for-tests.yml exec -T test-runner pytest
     - docker-compose -f docker-compose-for-tests.yml down
+
 push:
   stage: push
   only:
@@ -40,6 +46,7 @@ push:
     - docker pull $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
     - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:latest
     - docker push $CONTAINER_IMAGE:latest
+
 deploy:
   stage: deploy
   image:
@@ -53,5 +60,31 @@ deploy:
     - kubectl kustomize k8s | kubectl apply -f -
     - kubectl rollout restart deployment/celery-deployment
     - kubectl rollout restart deployment/bot-deployment
+  environment:
+    name: production
+
+push-dev:
+  stage: push-dev
+  only:
+    - develop
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:dev
+    - docker push $CONTAINER_IMAGE:dev
+
+deploy-dev:
+  stage: deploy-dev
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  only:
+    - develop
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context Ra1ze505/mailing_bot:yandex-k8s
+    - kubectl kustomize k8s-dev | kubectl apply -f -
+    - kubectl rollout restart deployment/celery-deployment-dev
+    - kubectl rollout restart deployment/bot-deployment-dev
   environment:
     name: production
