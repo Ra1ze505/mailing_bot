@@ -17,7 +17,11 @@ def setup_periodic_tasks(sender: Celery, **kwargs: dict) -> None:
 
 @app.task()
 def mailing() -> None:
-    loop = asyncio.get_event_loop()
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.get_event_loop()
+
     loop.run_until_complete(_mailing())
 
 
@@ -28,7 +32,10 @@ async def _mailing() -> None:
 
 @app.task()
 def parse() -> None:
-    loop = asyncio.get_event_loop()
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.get_event_loop()
     loop.run_until_complete(_parse())
 
 
