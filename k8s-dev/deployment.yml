@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,7 +14,13 @@ spec:
     spec:
       containers:
         - name: bot
-          image: registry.gitlab.com/ra1ze505/mailing_bot:dev
+          image: registry.gitlab.com/ra1ze505/mailing_bot:$(IMAGE_TAG_DEV)
+          env:
+            - name: IMAGE_TAG_DEV
+              valueFrom:
+                configMapKeyRef:
+                  name: image-tag-dev
+                  key: image_tag
           command:
             - "/usr/app/bot_entrypoint.sh"
           envFrom:
@@ -43,7 +48,13 @@ spec:
         spec:
           containers:
             - name: crons
-              image: registry.gitlab.com/ra1ze505/mailing_bot:dev
+              image: registry.gitlab.com/ra1ze505/mailing_bot:$(IMAGE_TAG_DEV)
+              env:
+                - name: IMAGE_TAG_DEV
+                  valueFrom:
+                    configMapKeyRef:
+                      name: image-tag-dev
+                      key: image_tag
               command: ["python", "-m", "src.worker.crons", "-n", "mailing"]
               envFrom:
                 - secretRef:
@@ -69,7 +80,13 @@ spec:
         spec:
           containers:
             - name: crons
-              image: registry.gitlab.com/ra1ze505/mailing_bot:dev
+              image: registry.gitlab.com/ra1ze505/mailing_bot:$(IMAGE_TAG_DEV)
+              env:
+                - name: IMAGE_TAG_DEV
+                  valueFrom:
+                    configMapKeyRef:
+                      name: image-tag-dev
+                      key: image_tag
               command: ["python", "-m", "src.worker.crons", "-n", "parse"]
               envFrom:
                 - secretRef:
