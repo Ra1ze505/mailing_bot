@@ -82,7 +82,6 @@ deploy-dev:
   only:
     - develop
   script:
-    - echo "image_tag=dev-$CI_COMMIT_SHORT_SHA" > k8s-dev/image-tag-dev.env
     - kubectl config get-contexts
     - kubectl config use-context Ra1ze505/mailing_bot:yandex-k8s
     - kubectl kustomize k8s-dev | kubectl apply -f -
