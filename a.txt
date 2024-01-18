@@ -10,4 +10,4 @@ configMapGenerator:
 images:
   - name: mailing_bot
     newName: registry.gitlab.com/ra1ze505/mailing_bot
-    newTag: develop
+    newTag: develop1

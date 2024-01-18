@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
         - name: bot
-          image: registry.gitlab.com/ra1ze505/mailing_bot:develop
-          imagePullPolicy: Always
+          image: mailing_bot
           command:
             - "/usr/app/bot_entrypoint.sh"
           envFrom:
@@ -43,7 +42,7 @@ spec:
         spec:
           containers:
             - name: crons
-              image: registry.gitlab.com/ra1ze505/mailing_bot:develop
+              image: mailing_bot
               command: ["python", "-m", "src.worker.crons", "-n", "mailing"]
               envFrom:
                 - secretRef:
@@ -69,7 +68,7 @@ spec:
         spec:
           containers:
             - name: crons
-              image: registry.gitlab.com/ra1ze505/mailing_bot:develop
+              image: mailing_bot
               command: ["python", "-m", "src.worker.crons", "-n", "parse"]
               envFrom:
                 - secretRef:
