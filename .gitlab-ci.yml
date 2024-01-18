@@ -67,7 +67,6 @@ deploy:
     - kubectl config get-contexts
     - kubectl config use-context Ra1ze505/mailing_bot:yandex-k8s
     - kubectl kustomize k8s | kubectl apply -f -
-    - kubectl rollout restart deployment/celery-deployment
     - kubectl rollout restart deployment/bot-deployment
   environment:
     name: production
@@ -93,7 +92,6 @@ deploy-dev:
     - kubectl config get-contexts
     - kubectl config use-context Ra1ze505/mailing_bot:yandex-k8s
     - kubectl kustomize k8s-dev | kubectl apply -f -
-    - kubectl rollout restart deployment/celery-deployment-dev
     - kubectl rollout restart deployment/bot-deployment-dev
   environment:
     name: develop
