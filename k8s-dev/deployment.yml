@@ -29,73 +29,54 @@ spec:
         - name: bot-logs
           emptyDir: {}
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1beta1
+kind: CronJob
 metadata:
-  name: celery-deployment-dev
+  name: mailing-cronjob
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: celery
-  template:
-    metadata:
-      labels:
-        app: celery
+  # Каждую минуту
+  schedule: "*/1 * * * *"
+  jobTemplate:
     spec:
-      containers:
-        - name: celery
-          image: registry.gitlab.com/ra1ze505/mailing_bot:dev
-          command:
-            - "celery"
-          args:
-            - "-A"
-            - "src.worker.tasks.app"
-            - "worker"
-            - "-B"
-            - "-E"
-
-          envFrom:
-            - secretRef:
-                name: env-config-dev
-          volumeMounts:
-            - name: celery-logs
-              mountPath: /usr/app/logs
-      imagePullSecrets:
-        - name: gitlab-registry
-
-      volumes:
-        - name: celery-logs
-          emptyDir: {}
+      template:
+        spec:
+          containers:
+            - name: crons
+              image: registry.gitlab.com/ra1ze505/mailing_bot:dev
+              command: ["python", "-m", "src.worker.crons", "-n", "mailing"]
+              envFrom:
+                - secretRef:
+                    name: env-config-dev
+              volumeMounts:
+                - name: cron-logs
+                  mountPath: /usr/app/logs
+          restartPolicy: OnFailure
+          volumes:
+            - name: cron-logs
+              emptyDir: {}
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1beta1
+kind: CronJob
 metadata:
-  name: redis-deployment-dev
+  name: parse-cronjob
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: redis-dev
-  template:
-    metadata:
-      labels:
-        app: redis-dev
+  # Каждый час в 30 минут
+  schedule: "30 * * * *"
+  jobTemplate:
     spec:
-      containers:
-        - name: redis-dev
-          image: redis
-          command: ["redis-server"]
-          workingDir: /data
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis-dev
-spec:
-  selector:
-    app: redis-dev
-  ports:
-    - protocol: TCP
-      port: 6379
-      targetPort: 6379
+      template:
+        spec:
+          containers:
+            - name: crons
+              image: registry.gitlab.com/ra1ze505/mailing_bot:dev
+              command: ["python", "-m", "src.worker.crons", "-n", "parse"]
+              envFrom:
+                - secretRef:
+                    name: env-config-dev
+              volumeMounts:
+                - name: cron-logs
+                  mountPath: /usr/app/logs
+          restartPolicy: OnFailure
+          volumes:
+            - name: cron-logs
+              emptyDir: {}
