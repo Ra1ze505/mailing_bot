@@ -49,8 +49,6 @@ module = [
   "factory.*",
   "pytest_async_sqlalchemy.*",
   "aiocache.*",
-  "celery.*",
-
 ]
 ignore_missing_imports = true
 
@@ -95,7 +93,6 @@ mypy-extensions = "~0.4.3"
 # Libs
 httpx = "^0.23.0"
 typer = { version = "^0.6.1", extras = ["all"] }
-celery = "^5.2.7"
 redis = "^4.3.1"
 sqlalchemy-filterset = "^1.0.1"
 
