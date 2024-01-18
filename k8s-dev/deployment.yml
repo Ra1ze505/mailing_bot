@@ -33,7 +33,7 @@ spec:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: mailing-cronjob
+  name: mailing-cronjob-dev
 spec:
   # Каждую минуту
   schedule: "*/1 * * * *"
@@ -59,7 +59,7 @@ spec:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: parse-cronjob
+  name: parse-cronjob-dev
 spec:
   # Каждый час в 30 минут
   schedule: "30 * * * *"
