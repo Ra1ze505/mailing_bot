@@ -38,6 +38,8 @@ spec:
   schedule: "*/1 * * * *"
   jobTemplate:
     spec:
+      successfulJobsHistoryLimit: 1
+      failedJobsHistoryLimit: 1
       template:
         spec:
           containers:
@@ -51,7 +53,6 @@ spec:
                 - name: cron-logs
                   mountPath: /usr/app/logs
           restartPolicy: OnFailure
-          successfulJobsHistoryLimit: 1
           volumes:
             - name: cron-logs
               emptyDir: {}
@@ -65,6 +66,8 @@ spec:
   schedule: "30 * * * *"
   jobTemplate:
     spec:
+      successfulJobsHistoryLimit: 1
+      failedJobsHistoryLimit: 1
       template:
         spec:
           containers:
@@ -78,7 +81,6 @@ spec:
                 - name: cron-logs
                   mountPath: /usr/app/logs
           restartPolicy: OnFailure
-          successfulJobsHistoryLimit: 1
           volumes:
             - name: cron-logs
               emptyDir: {}
