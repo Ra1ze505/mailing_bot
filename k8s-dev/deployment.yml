@@ -51,6 +51,7 @@ spec:
                 - name: cron-logs
                   mountPath: /usr/app/logs
           restartPolicy: OnFailure
+          successfulJobsHistoryLimit: 1
           volumes:
             - name: cron-logs
               emptyDir: {}
@@ -77,6 +78,7 @@ spec:
                 - name: cron-logs
                   mountPath: /usr/app/logs
           restartPolicy: OnFailure
+          successfulJobsHistoryLimit: 1
           volumes:
             - name: cron-logs
               emptyDir: {}
