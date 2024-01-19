@@ -36,10 +36,10 @@ metadata:
 spec:
   # Каждую минуту
   schedule: "*/1 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
-      successfulJobsHistoryLimit: 1
-      failedJobsHistoryLimit: 1
       template:
         spec:
           containers:
@@ -64,10 +64,10 @@ metadata:
 spec:
   # Каждый час в 30 минут
   schedule: "30 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
-      successfulJobsHistoryLimit: 1
-      failedJobsHistoryLimit: 1
       template:
         spec:
           containers:
