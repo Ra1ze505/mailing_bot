@@ -3,10 +3,6 @@ kind: Kustomization
 resources:
   - deployment.yml
 
-configMapGenerator:
-  - name: image-tag-dev
-    env: image-tag-dev.env
-
 images:
   - name: mailing_bot
     newName: registry.gitlab.com/ra1ze505/mailing_bot
