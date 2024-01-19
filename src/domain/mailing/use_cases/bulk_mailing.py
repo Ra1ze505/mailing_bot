@@ -6,7 +6,7 @@ from src.domain.rate.interfaces import IGetCurrentRate
 from src.domain.user.interfaces import IUserRepository
 from src.domain.weather.interfaces import IGetWeatherForecastPretty
 
-MESSAGE = "{forecast}\n\n{rate}\n\n{news}\nпроверочка"
+MESSAGE = "{forecast}\n\n{rate}\n\n{news}"
 
 
 class BulkMailing:
