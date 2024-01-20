@@ -6,8 +6,8 @@
 python -m src.handlers
 ```
 
-## Run celery
+## Run cron
 
 ```
-celery -A src.worker.tasks.app worker -B -E
+pthon -m src.worker.crons -n mailing
 ```
