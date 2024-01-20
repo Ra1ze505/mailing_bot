@@ -42,18 +42,9 @@ def faker() -> Faker:
 class BotMock(IBotRepository):
     def __init__(self) -> None:
         self.sent_messages: list[tuple[int, str]] = []
-        self.entered = False
 
     async def send_message(self, to: int, msg: str) -> None:
-        if self.entered:
-            self.sent_messages.append((to, msg))
-
-    async def __aenter__(self) -> "BotMock":
-        self.entered = True
-        return self
-
-    async def __aexit__(self, *args: tuple, **kwargs: dict) -> None:
-        self.entered = False
+        self.sent_messages.append((to, msg))
 
 
 @pytest.fixture(autouse=True)
