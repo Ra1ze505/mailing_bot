@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, validator
 from src.common.utils import get_wind_direction
 
 PRETTY_WEATHER_NOW_MESSAGE = """
-*Погода в городе {city}:*
+**Погода в городе {city}:**
 {description}
 Температура: {temp}°C
 Ветер {wind_direction}
@@ -13,11 +13,11 @@ PRETTY_WEATHER_NOW_MESSAGE = """
 """
 
 PRETTY_WEATHER_MESSAGE = """
-*Погода в городе {city}*
+**Погода в городе {city}**
 В течении дня:
-- Cредняя температура  {mean_temp}°C
-- Максимальная температура {max_temp}°C
-- Минимальная температура {min_temp}°C"""
+-- Cредняя температура  {mean_temp}°C
+-- Максимальная температура {max_temp}°C
+-- Минимальная температура {min_temp}°C"""
 
 
 class CoordinatesSchema(BaseModel):
