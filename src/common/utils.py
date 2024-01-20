@@ -55,6 +55,6 @@ def run_async(func: Callable) -> Callable[..., Any]:
         async def coro_wrapper() -> Any:
             return await func(*args, **kwargs)
 
-        return anyio.run(coro_wrapper)
+        return anyio.run(coro_wrapper)  # type: ignore
 
     return wrapper

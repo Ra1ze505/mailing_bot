@@ -1,19 +1,25 @@
-from telethon import TelegramClient
+import httpx
+from telethon.extensions import markdown
 
-from src.common.db import Database
 from src.domain.bot.interfaces import IBotRepository
 
 
+class BotRepositoryException(Exception):
+    ...
+
+
 class BotRepository(IBotRepository):
-    def __init__(self, bot: TelegramClient):
-        self.bot = bot
+    def __init__(self, config: dict):
+        api_token = config.get("token")
+        self.base_url = f"https://api.telegram.org/bot{api_token}"
 
     async def send_message(self, to: int, msg: str) -> None:
-        await self.bot.send_message(to, msg)
-
-    async def __aenter__(self) -> "BotRepository":
-        await self.bot.start()
-        return self
-
-    async def __aexit__(self, *args: tuple, **kwargs: dict) -> None:
-        await self.bot.disconnect()
+        api_url = f"{self.base_url}/sendMessage"
+        msg, entities = markdown.parse(msg)
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                api_url,
+                data={"chat_id": to, "text": msg, "entities": entities},
+            )
+            if response.status_code != 200:
+                raise BotRepositoryException(response.text, response.status_code)

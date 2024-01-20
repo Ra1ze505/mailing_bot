@@ -1,12 +1,10 @@
 import copy
-from contextlib import AbstractAsyncContextManager
-from typing import Callable, Generic, Type
+from typing import Generic, Type
 from uuid import UUID
 
-from pydantic import BaseModel, parse_obj_as
+from pydantic import parse_obj_as
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import Select
 from sqlalchemy_filterset import AsyncFilterSet
 

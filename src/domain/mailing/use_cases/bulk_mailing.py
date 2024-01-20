@@ -1,5 +1,7 @@
 from datetime import datetime, time
 
+from loguru import logger
+
 from src.domain.bot.interfaces import IBotRepository
 from src.domain.news.interfaces import IGetCurrentNews
 from src.domain.rate.interfaces import IGetCurrentRate
@@ -31,12 +33,16 @@ class BulkMailing:
         )
         last_news = await self.get_current_news()
         rate = await self.get_current_rate()
-        async with self.bot as bot:
-            for user in users:
-                forecast = await self.get_weather_forecast_pretty(user.city)
-                await bot.send_message(
+        for user in users:
+            forecast = await self.get_weather_forecast_pretty(user.city)
+            try:
+                await self.bot.send_message(
                     user.chat_id,
                     MESSAGE.format(
                         forecast=forecast, rate=rate.pretty_rate, news=last_news.content
                     ),
                 )
+                logger.info(f"Success mailing for {user.username}")
+
+            except Exception as e:
+                logger.error(f"Fail send mailing for {user.username}: {e}")
