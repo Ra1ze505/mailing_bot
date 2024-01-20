@@ -28,4 +28,4 @@ class RateOutSchema(RateBaseSchema, BaseOutputSchema):
 
     @property
     def pretty_rate(self) -> str:
-        return f"\*\*Курс валют на сегодня\*\*\nДоллар: {self.usd:.2f}\nЕвро: {self.eur:.2f}"
+        return f"**Курс валют на сегодня**\nДоллар: {self.usd:.2f}\nЕвро: {self.eur:.2f}"
