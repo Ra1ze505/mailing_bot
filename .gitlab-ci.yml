@@ -1,3 +1,4 @@
+---
 image: docker:latest
 services:
   - docker:dind
@@ -49,7 +50,8 @@ push:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
     - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:latest
-    - docker push $CONTAINER_IMAGE:latest
+    - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:prod-$CI_COMMIT_SHORT_SHA
+    - docker push $CONTAINER_IMAGE:prod-$CI_COMMIT_SHORT_SHA
 deploy:
   stage: deploy
   image:
@@ -58,6 +60,7 @@ deploy:
   only:
     - master
   script:
+    - "sed -i -e \"s/newTag: prod/newTag: prod-$CI_COMMIT_SHORT_SHA/g\" k8s/kustomization.yml"
     - kubectl config get-contexts
     - kubectl config use-context Ra1ze505/mailing_bot:yandex-k8s
     - kubectl kustomize k8s | kubectl apply -f -
@@ -71,8 +74,8 @@ push-dev:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA
-    - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:develop-$CI_COMMIT_SHORT_SHA
-    - docker push $CONTAINER_IMAGE:develop-$CI_COMMIT_SHORT_SHA
+    - docker tag $CONTAINER_IMAGE:$CI_COMMIT_SHORT_SHA $CONTAINER_IMAGE:dev-$CI_COMMIT_SHORT_SHA
+    - docker push $CONTAINER_IMAGE:dev-$CI_COMMIT_SHORT_SHA
 
 deploy-dev:
   stage: deploy-dev
@@ -82,7 +85,7 @@ deploy-dev:
   only:
     - develop
   script:
-    - "sed -i -e \"s/newTag: develop/newTag: develop-$CI_COMMIT_SHORT_SHA/g\" k8s-dev/kustomization.yml"
+    - "sed -i -e \"s/newTag: dev/newTag: dev-$CI_COMMIT_SHORT_SHA/g\" k8s-dev/kustomization.yml"
     - kubectl config get-contexts
     - kubectl config use-context Ra1ze505/mailing_bot:yandex-k8s
     - kubectl kustomize k8s-dev | kubectl apply -f -

@@ -1,4 +1,10 @@
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - deployment.yml
+
+images:
+  - name: mailing_bot
+    newName: registry.gitlab.com/ra1ze505/mailing_bot
+    newTag: prod
