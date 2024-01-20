@@ -2,7 +2,7 @@ import re
 import uuid
 from contextlib import asynccontextmanager
 from contextvars import ContextVar
-from typing import Any, AsyncGenerator, Union, cast
+from typing import Any, AsyncGenerator, Union
 
 from sqlalchemy import MetaData, Table
 from sqlalchemy.ext.asyncio import (

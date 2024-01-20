@@ -1,4 +1,3 @@
-from loguru import logger
 from sqlalchemy.util import asyncio
 from telethon import TelegramClient
 
