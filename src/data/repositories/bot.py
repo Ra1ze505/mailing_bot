@@ -16,7 +16,7 @@ class BotRepository(IBotRepository):
         api_url = f"{self.base_url}/sendMessage"
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                api_url, data={"chat_id": to, "text": msg, "parse_mode": "MarkdownV2"}
+                api_url, data={"chat_id": to, "text": msg, "parse_mode": "Markdown"}
             )
             if response.status_code != 200:
                 raise BotRepositoryException(response.text, response.status_code)
