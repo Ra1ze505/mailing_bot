@@ -1,5 +1,4 @@
 import httpx
-from httpx import AsyncClient
 from pydantic import HttpUrl, parse_obj_as
 from telethon import TelegramClient
 

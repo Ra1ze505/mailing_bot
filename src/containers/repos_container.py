@@ -16,7 +16,7 @@ class ReposContainer(containers.DeclarativeContainer):
     db: providers.Provider[Database] = providers.Dependency()
     gateways = providers.DependenciesContainer()
 
-    bot_repo = providers.Factory(BotRepository, bot=gateways.bot)
+    bot_repo = providers.Factory(BotRepository, config.bot)
     parse_news_repo = providers.Factory(
         ParseNewsRepository,
         parse_client=gateways.parse_client,
