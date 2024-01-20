@@ -12,5 +12,5 @@ class Gateways(containers.DeclarativeContainer):
         setup_logging, config=config.logger
     )
     db = providers.Singleton(Database, config.database)
-    bot = providers.Singleton(init_bot, config.bot)
+    bot = providers.Singleton(init_bot, config=config.bot, db=db)
     parse_client = providers.Singleton(init_parse_client, config.parse)
