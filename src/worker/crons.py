@@ -5,7 +5,7 @@ from src.containers.container import container
 
 
 async def mailing() -> None:
-    bulk_mailing = await container.use_cases.bulk_mailing()
+    bulk_mailing = container.use_cases.bulk_mailing()
     await bulk_mailing()
 
 
