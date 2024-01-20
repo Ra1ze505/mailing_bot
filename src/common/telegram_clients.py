@@ -31,9 +31,10 @@ async def save_session(db: Database, session: str) -> None:
 
 
 async def create_bot(config: dict, session: str | None = None) -> TelegramClient:
-    return TelegramClient(
+    bot = await TelegramClient(
         StringSession(session), config.get("api_id"), config.get("api_hash")
     ).start(bot_token=config.get("token"))
+    return bot
 
 
 async def init_bot(config: dict, db: Database) -> TelegramClient:
