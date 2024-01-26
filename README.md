@@ -9,5 +9,5 @@ python -m src.handlers
 ## Run cron
 
 ```
-pthon -m src.worker.crons -n mailing
+python -m src.worker.crons -n mailing
 ```
