@@ -11,3 +11,7 @@ python -m src.handlers
 ```
 python -m src.worker.crons -n mailing
 ```
+
+## Todo
+
+* зарефачить, если нет `username`

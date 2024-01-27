@@ -11,7 +11,7 @@ class GetOrCreateUser:
     async def __call__(self, event: events.NewMessage.Event) -> UserOutSchema:
         user = UserInSchema(
             id=event.sender_id,
-            username=event.sender.username,
+            username=event.sender.username or "",
             chat_id=event.chat_id,
         )
         return await self.user_repo.get_or_create(user.dict())
