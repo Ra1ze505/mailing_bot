@@ -7,7 +7,7 @@ from src.domain.user.dto.base import FeedBackInSchema, FeedBackOutSchema, UserOu
 from src.domain.user.interfaces import ICreateFeedBack, IFeedBackRepository
 from src.domain.user.use_cases.get_or_create import GetOrCreateUser
 
-ADMIN_NOTIFICATION_MESSAGE: str = "Новое сообщение от @{username}\n```\n{message}\n```"
+ADMIN_NOTIFICATION_MESSAGE: str = "Новое сообщение от @{username}:\n\n{message}"
 
 
 class CreateFeedBack(ICreateFeedBack):
