@@ -1,3 +1,4 @@
+import pytest
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,11 +8,17 @@ from src.domain.handlers.interfaces import IStartHandler
 from tests.factories.event import EventFactory
 
 
+@pytest.mark.parametrize(
+    "event_kwargs",
+    [
+        {},
+        {"username": None},
+    ],
+)
 async def test_start_handler(
-    container: BaseAppContainer,
-    db_session: AsyncSession,
+    container: BaseAppContainer, db_session: AsyncSession, event_kwargs: dict
 ) -> None:
-    event = EventFactory()
+    event = EventFactory(**event_kwargs)
     use_case: IStartHandler = container.use_cases.start_handler()
     await use_case(event=event)
 

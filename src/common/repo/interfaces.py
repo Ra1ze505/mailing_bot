@@ -1,5 +1,4 @@
-import abc
-from typing import Generic, Protocol, Type, TypeVar
+from typing import Protocol, Type, TypeVar
 
 from sqlalchemy.sql import Select
 
