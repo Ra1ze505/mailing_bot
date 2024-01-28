@@ -69,7 +69,6 @@ asyncio_mode = "auto"
 python = "^3.11"
 dependency-injector = "^4.40.0"
 pydantic = "^1.10.2"
-sentry-sdk = "^1.9.8"
 loguru = "^0.6.0"
 Telethon = "^1.25.1"
 

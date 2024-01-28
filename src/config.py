@@ -36,11 +36,6 @@ class AppSettings(EnvBaseSettings):
         env_prefix = "app_"
 
 
-class BrokerConfig(EnvBaseSettings):
-    broker_url: str = "redis://localhost:6379/0"
-    broker_api: str = "redis://localhost:6379/0"
-
-
 class PostgresConfig(EnvBaseSettings):
     scheme: str = "postgresql+asyncpg"
     host: str = "localhost"
@@ -65,14 +60,6 @@ class PostgresConfig(EnvBaseSettings):
         if not url:
             url = f"{values['scheme']}://{values['user']}:{values['password']}@{values['host']}:{values['port']}/{values['db']}"
         return url
-
-
-class SentryConfig(EnvBaseSettings):
-    dsn: HttpUrl | None
-    env: str | None
-
-    class Config:
-        env_prefix = "sentry_"
 
 
 class BotConfig(EnvBaseSettings):
@@ -114,10 +101,8 @@ class Settings(BaseSettings):
     app: AppSettings = AppSettings(name="mailing_bot")
     database: PostgresConfig = PostgresConfig()
     bot: BotConfig = BotConfig()
-    sentry: SentryConfig = SentryConfig()
     logger: LoggingSettings = LoggingSettings()
     open_weather: OpenWeatherConfig = OpenWeatherConfig()
-    broker: BrokerConfig = BrokerConfig()
     parse: ParseConfig = ParseConfig()
     rate: RateConfig = RateConfig()
     admin_tg_id: int = 1111111
