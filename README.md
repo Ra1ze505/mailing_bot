@@ -11,3 +11,9 @@ python -m src.handlers
 ```
 python -m src.worker.crons -n mailing
 ```
+
+## To run commands
+
+```
+python -m src.worker.commands --help
+```

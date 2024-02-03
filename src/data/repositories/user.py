@@ -17,3 +17,21 @@ class UserRepository(BaseRepository):
         async with self.db.session() as session:
             result = (await session.execute(stmt)).scalars().all()
             return [parse_obj_as(self.schema, obj) for obj in result]
+
+    async def filter_by_chat_ids(self, chat_ids: list[int]) -> list[UserOutSchema]:
+        stmt = select(self.model).where(self.model.chat_id.in_(chat_ids))
+        async with self.db.session() as session:
+            result = (await session.execute(stmt)).scalars().all()
+            return [parse_obj_as(self.schema, obj) for obj in result]
+
+    async def filter_by_usernames(self, usernames: list[str]) -> list[UserOutSchema]:
+        stmt = select(self.model).where(self.model.username.in_(usernames))
+        async with self.db.session() as session:
+            result = (await session.execute(stmt)).scalars().all()
+            return [parse_obj_as(self.schema, obj) for obj in result]
+
+    async def get_all(self) -> list[UserOutSchema]:
+        stmt = select(self.model)
+        async with self.db.session() as session:
+            result = (await session.execute(stmt)).scalars().all()
+            return [parse_obj_as(self.schema, obj) for obj in result]
