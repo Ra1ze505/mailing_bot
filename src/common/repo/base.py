@@ -6,7 +6,6 @@ from pydantic import parse_obj_as
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.sql import Select
-from sqlalchemy_filterset import AsyncFilterSet
 
 from src.common.db import Database
 from src.common.exceptions.db import NotFoundException
@@ -19,7 +18,6 @@ class BaseRepository(IBaseRepository[SchemaOutType], Generic[ModelType, SchemaOu
     schema: Type[SchemaOutType]
     query: Select | None = None
     db: Database
-    filter_set: Type[AsyncFilterSet]
 
     def __init__(self, db: Database):
         self.db = db

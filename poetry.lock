@@ -1379,20 +1379,6 @@ pymysql = ["pymysql", "pymysql (<1)"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
-name = "sqlalchemy-filterset"
-version = "1.0.1"
-description = "An easy way to filter, sort, paginate SQLAlchemy queries"
-optional = false
-python-versions = ">=3.7,<4.0.0"
-files = [
-    {file = "sqlalchemy_filterset-1.0.1-py3-none-any.whl", hash = "sha256:83e03b941b82d09ed02283c37c07a256290d21054cbcbd4b4387a5d4dca3ded4"},
-    {file = "sqlalchemy_filterset-1.0.1.tar.gz", hash = "sha256:5c2186104858163a70387e30a90e5371487da617c2b1ad71c6e40a02d4254188"},
-]
-
-[package.dependencies]
-SQLAlchemy = {version = ">=1.4,<2", extras = ["asyncio"]}
-
-[[package]]
 name = "sqlalchemy-utils"
 version = "0.38.3"
 description = "Various utility functions for SQLAlchemy."
@@ -1598,4 +1584,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "5e8a9365d2f969e611eaf1b09f46654588afb4d7e7499ac8b16db542bdd3b04d"
+content-hash = "a8cef4c4600d0c47fc530230ea2eb611691aaa2607a2ca3325d670237dc2c507"
