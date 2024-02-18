@@ -31,18 +31,22 @@ class BulkMailing:
         users = await self.user_repo.get_by_sending_time(
             time(hour=time_now.hour, minute=time_now.minute)
         )
-        last_news = await self.get_current_news()
+        last_news = await self._get_news()
         rate = await self.get_current_rate()
         for user in users:
             forecast = await self.get_weather_forecast_pretty(user.city)
             try:
                 await self.bot.send_message(
                     user.chat_id,
-                    MESSAGE.format(
-                        forecast=forecast, rate=rate.pretty_rate, news=last_news.content
-                    ),
+                    MESSAGE.format(forecast=forecast, rate=rate.pretty_rate, news=last_news),
                 )
                 logger.info(f"Success mailing for {user.username}")
 
             except Exception as e:
                 logger.error(f"Fail send mailing for {user.username}: {e}")
+
+    async def _get_news(self) -> str:
+        if datetime.utcnow().weekday() != 6:
+            return (await self.get_current_news()).content
+
+        return "В воскресение нужно отдохнуть от новостей :)"
