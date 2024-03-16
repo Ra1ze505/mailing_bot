@@ -54,7 +54,6 @@ class WeatherNowOutSchema(BaseModel):
     weather: list[WeatherSchema]
     base: str
     main: WeatherMainSchema
-    visibility: int
     wind: WindSchema
     rain: dict | None = None
     clouds: dict
@@ -83,7 +82,6 @@ class WeatherListSchema(BaseModel):
     weather: list[WeatherSchema]
     clouds: dict
     wind: WindSchema
-    visibility: int
     pop: float
     rain: dict | None = None
     sys: dict
