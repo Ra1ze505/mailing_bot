@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: bot_container
+    command: ["/usr/app/bot_entrypoint.sh"]
+    volumes:
+      - ./logs:/usr/app/logs
+    env_file:
+      - .env.prod
+
+  mailing-cronjob:
+    build: .
+    container_name: mailing_cronjob_container
+    command: ["sh", "-c", "while true; do python -m src.worker.crons -n mailing; sleep 60; done"]
+    volumes:
+      - ./logs:/usr/app/logs
+    env_file:
+      - .env.prod
+
+  parse-cronjob:
+    build: .
+    container_name: parse_cronjob_container
+    command: ["sh", "-c", "while true; do sleep $(( $(date +%s) % 3600 )); python -m src.worker.crons -n parse; sleep 3600; done"]
+    volumes:
+      - ./logs:/usr/app/logs
+    env_file:
+      - .env.prod
